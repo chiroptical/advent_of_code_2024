@@ -21,6 +21,4 @@ cards -> scorecard cards : ['$1'|'$2'].
 
 Erlang code.
 
-extract_integer({_Token, _Line, Value}) when is_integer(Value) -> Value;
-extract_integer({_Token, _Line, Value}) when is_list(Value) -> list_to_integer(Value);
 extract_integer({_Token, _Line, Value}) -> Value.

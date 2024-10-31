@@ -4,8 +4,6 @@
 -export([parse/1, parse_and_scan/1, format_error/1]).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2023.yrl", 22).
 
-extract_integer({_Token, _Line, Value}) when is_integer(Value) -> Value;
-extract_integer({_Token, _Line, Value}) when is_list(Value) -> list_to_integer(Value);
 extract_integer({_Token, _Line, Value}) -> Value.
 
 -file(
@@ -254,7 +252,7 @@ yecctoken2string1(Other) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2023.erl", 199).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2023.erl", 197).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 -compile({nowarn_unused_function, yeccpars2/7}).
@@ -564,4 +562,4 @@ yeccpars2_15_(__Stack0) ->
         | __Stack
     ].
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2023.yrl", 27).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2023.yrl", 25).
