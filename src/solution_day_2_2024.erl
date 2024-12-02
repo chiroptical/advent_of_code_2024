@@ -23,14 +23,14 @@ lex(Input) ->
 parse(Input) ->
     parser_day_2_2024:parse(Input).
 
--spec increasing_rule(integer(), integer()) -> boolean().
-increasing_rule(X, Y) ->
+-spec rule(integer(), integer(), function()) -> boolean().
+rule(X, Y, Fun) ->
     maybe
-        ok ?= case X < Y of
+        ok ?= case Fun(X, Y) of
             true -> ok;
             false -> error
             end,
-        ok ?= case Y - X < 4 of
+        ok ?= case abs(Y - X) < 4 of
             true -> ok;
             false -> error
             end,
@@ -39,21 +39,13 @@ increasing_rule(X, Y) ->
         error -> false
     end.
 
+-spec increasing_rule(integer(), integer()) -> boolean().
+increasing_rule(X, Y) ->
+    rule(X, Y, fun(A, B) -> A < B end).
+
 -spec decreasing_rule(integer(), integer()) -> boolean().
 decreasing_rule(X, Y) ->
-    maybe
-        ok ?= case X > Y of
-            true -> ok;
-            false -> error
-            end,
-        ok ?= case X - Y < 4 of
-            true -> ok;
-            false -> error
-            end,
-        true
-    else
-        error -> false
-    end.
+    rule(X, Y, fun(A, B) -> A > B end).
 
 -spec evaluate_rules(list(integer()), #rules{}) -> #rules{}.
 evaluate_rules(_, Rules = #rules{increases = false, decreases = false}) ->
