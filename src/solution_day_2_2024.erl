@@ -92,18 +92,15 @@ part_one(Input) ->
         Input
     ).
 
-label_from([], _N) ->
-    [];
-label_from([Head | Tail], N) ->
-    [{N, Head} | label_from(Tail, N + 1)].
+drop_nth_inner(1, [_Head | Tail], Acc) ->
+    lists:append(queue:to_list(Acc), Tail);
+drop_nth_inner(_N, [], Acc) ->
+    queue:to_list(Acc);
+drop_nth_inner(N, [Head | Tail], Acc) ->
+    drop_nth_inner(N - 1, Tail, queue:in(Head, Acc)).
 
-label(X) ->
-    label_from(X, 1).
-
-delete_nth(N, Input) ->
-    PList = label(Input),
-    NewList = proplists:delete(N, PList),
-    [V || {_K, V} <- NewList].
+drop_nth(N, X) when N >= 1 ->
+    drop_nth_inner(N, X, queue:new()).
 
 evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
     case N > length(Input) of
@@ -111,7 +108,7 @@ evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
             %% if we reach the end of the list, we didn't evaluate anything to true
             false;
         false ->
-            NewList = delete_nth(N, Input),
+            NewList = drop_nth(N, Input),
             case evaluate_rules(NewList, #rules{}) of
                 #rules{increases = true} ->
                     true;
