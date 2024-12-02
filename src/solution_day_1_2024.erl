@@ -12,6 +12,8 @@
     part_two/0
 ]).
 
+-define(DEBUG, false).
+
 build_scanner() ->
     {ok, _} = leex:file("src/lexer_day_1_2024.xrl").
 
@@ -40,9 +42,9 @@ handle_input(Input) when is_binary(Input) ->
     lists:unzip(Yecc);
 handle_input(Input) ->
     {ok, Leex} = scan(Input),
-    logger:notice(#{leex => Leex}),
+    with:log(?DEBUG, #{leex => Leex}),
     {ok, Yecc} = parse(Leex),
-    logger:notice(#{yecc => Yecc}),
+    with:log(?DEBUG, #{yecc => Yecc}),
     lists:unzip(Yecc).
 
 part_one_test() ->
@@ -50,7 +52,7 @@ part_one_test() ->
 
     SortLeft = lists:sort(Left),
     SortRight = lists:sort(Right),
-    logger:notice(#{sort_left => SortLeft, sort_right => SortRight}),
+    with:log(?DEBUG, #{sort_left => SortLeft, sort_right => SortRight}),
 
     Differences = lists:zipwith(fun(X, Y) -> abs(Y - X) end, SortLeft, SortRight),
     lists:sum(Differences).
@@ -70,9 +72,9 @@ part_two_test() ->
     {Left, Right} = handle_input(test_input()),
 
     Groups = maps:groups_from_list(fun(X) -> X end, Right),
-    logger:notice(#{groups => Groups}),
+    with:log(?DEBUG, #{groups => Groups}),
     Counts = maps:map(fun(_, X) -> length(X) end, Groups),
-    logger:notice(#{counts => Counts}),
+    with:log(?DEBUG, #{counts => Counts}),
 
     % Note: both folds take (X, Acc) as function input!
     lists:foldl(fun(X, Acc) -> Acc + X * maps:get(X, Counts, 0) end, 0, Left).

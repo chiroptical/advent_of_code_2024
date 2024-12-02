@@ -2,6 +2,8 @@
 -include("solution_day_2_2024.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
+-define(DEBUG, false).
+
 part_two_test() ->
     TestInput =
         "7 6 4 2 1\n"
@@ -12,10 +14,10 @@ part_two_test() ->
         "1 3 6 7 9\n",
 
     {ok, Lex} = solution_day_2_2024:lex(TestInput),
-    logger:notice(#{lex => Lex}),
+    with:log(?DEBUG, #{lex => Lex}),
 
     {ok, Parse} = solution_day_2_2024:parse(Lex),
-    logger:notice(#{parse => Parse}),
+    with:log(?DEBUG, #{parse => Parse}),
 
     ?assertEqual(4, solution_day_2_2024:part_two(Parse)).
 
@@ -39,10 +41,10 @@ part_one_test() ->
         "1 3 6 7 9\n",
 
     {ok, Lex} = solution_day_2_2024:lex(TestInput),
-    logger:notice(#{lex => Lex}),
+    with:log(?DEBUG, #{lex => Lex}),
 
     {ok, Parse} = solution_day_2_2024:parse(Lex),
-    logger:notice(#{parse => Parse}),
+    with:log(?DEBUG, #{parse => Parse}),
 
     ?assertEqual(2, solution_day_2_2024:part_one(Parse)).
 
