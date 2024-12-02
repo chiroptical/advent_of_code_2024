@@ -88,18 +88,6 @@ part_one(Input) ->
         Input
     ).
 
--spec drop_nth_inner(pos_integer(), list(), queue:queue()) -> list().
-drop_nth_inner(1, [_Head | Tail], Acc) ->
-    lists:append(queue:to_list(Acc), Tail);
-drop_nth_inner(_N, [], Acc) ->
-    queue:to_list(Acc);
-drop_nth_inner(N, [Head | Tail], Acc) ->
-    drop_nth_inner(N - 1, Tail, queue:in(Head, Acc)).
-
--spec drop_nth(pos_integer(), list()) -> list().
-drop_nth(N, X) ->
-    drop_nth_inner(N, X, queue:new()).
-
 -spec evaluate_rules_with_dampener(list(integer()), pos_integer(), #rules{}) -> boolean().
 evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
     case N > length(Input) of
@@ -107,7 +95,7 @@ evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
             %% if we reach the end of the list, we didn't evaluate anything to true
             false;
         false ->
-            NewList = drop_nth(N, Input),
+            NewList = list_utils:drop_nth(N, Input),
             case evaluate_rules(NewList, #rules{}) of
                 #rules{increases = true} ->
                     true;
