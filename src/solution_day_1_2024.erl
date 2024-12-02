@@ -1,8 +1,6 @@
 -module(solution_day_1_2024).
 
 -export([
-    build_scanner/0,
-    build_parser/0,
     scan/1,
     parse/1,
     test_input/0,
@@ -13,12 +11,6 @@
 ]).
 
 -define(DEBUG, false).
-
-build_scanner() ->
-    {ok, _} = leex:file("src/lexer_day_1_2024.xrl").
-
-build_parser() ->
-    {ok, _} = yecc:file("src/parser_day_1_2024.yrl").
 
 scan(Input) ->
     {ok, Tokens, _} = lexer_day_1_2024:string(Input),

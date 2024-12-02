@@ -23,6 +23,7 @@ lex(Input) ->
 parse(Input) ->
     parser_day_2_2024:parse(Input).
 
+-spec increasing_rule(integer(), integer()) -> boolean().
 increasing_rule(X, Y) ->
     maybe
         ok ?= case X < Y of
@@ -38,6 +39,7 @@ increasing_rule(X, Y) ->
         error -> false
     end.
 
+-spec decreasing_rule(integer(), integer()) -> boolean().
 decreasing_rule(X, Y) ->
     maybe
         ok ?= case X > Y of
@@ -53,6 +55,7 @@ decreasing_rule(X, Y) ->
         error -> false
     end.
 
+-spec evaluate_rules(list(integer()), #rules{}) -> #rules{}.
 evaluate_rules(_, Rules = #rules{increases = false, decreases = false}) ->
     Rules;
 evaluate_rules([_X], Rules) ->
@@ -78,6 +81,7 @@ evaluate_rules([X, Y | Rest], #rules{increases = true, decreases = true}) ->
         }
     ).
 
+-spec part_one(list(list(integer()))) -> integer().
 part_one(Input) ->
     lists:foldl(
         fun(X, Acc) ->
@@ -92,6 +96,7 @@ part_one(Input) ->
         Input
     ).
 
+-spec drop_nth_inner(pos_integer(), list(), queue:queue()) -> list().
 drop_nth_inner(1, [_Head | Tail], Acc) ->
     lists:append(queue:to_list(Acc), Tail);
 drop_nth_inner(_N, [], Acc) ->
@@ -99,9 +104,11 @@ drop_nth_inner(_N, [], Acc) ->
 drop_nth_inner(N, [Head | Tail], Acc) ->
     drop_nth_inner(N - 1, Tail, queue:in(Head, Acc)).
 
-drop_nth(N, X) when N >= 1 ->
+-spec drop_nth(pos_integer(), list()) -> list().
+drop_nth(N, X) ->
     drop_nth_inner(N, X, queue:new()).
 
+-spec evaluate_rules_with_dampener(list(integer()), pos_integer(), #rules{}) -> boolean().
 evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
     case N > length(Input) of
         true ->
@@ -119,6 +126,7 @@ evaluate_rules_with_dampener(Input, N, Rules = #rules{}) ->
             end
     end.
 
+-spec part_two(list(list(integer()))) -> integer().
 part_two(Input) ->
     lists:foldl(
         fun(X, Acc) ->
