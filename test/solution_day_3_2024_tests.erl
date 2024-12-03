@@ -69,6 +69,8 @@ part_one_test() ->
 part_one_solution_test() ->
     {ok, Input} = file:read_file("inputs/2024-day-3.txt"),
     {ok, Lex} = solution_day_3_2024:lex(binary_to_list(Input)),
+    ?LOG(#{lex => Lex}),
     {ok, Parse} = solution_day_3_2024:parse(Lex),
+    ?LOG(#{parse => Parse}),
     % This isn't the correct number
     ?assertNotEqual(182949745, solution_day_3_2024:part_one(Parse)).
