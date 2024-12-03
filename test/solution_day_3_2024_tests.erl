@@ -58,6 +58,14 @@ incomplete_three_test() ->
     {ok, Parse} = solution_day_3_2024:parse(Lex),
     ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
 
+issues_test() ->
+    TestInput = "mul(690,168*),mulwhen(16,622),mulwho(185,234)",
+    {ok, Lex} = solution_day_3_2024:lex(TestInput),
+    ?LOG(#{lex => Lex}),
+    {ok, Parse} = solution_day_3_2024:parse(Lex),
+    ?LOG(#{parse => Parse}),
+    ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
+
 part_one_test() ->
     TestInput = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))\n",
     {ok, Lex} = solution_day_3_2024:lex(TestInput),
@@ -72,10 +80,8 @@ part_one_solution_test() ->
     {ok, Parse} = solution_day_3_2024:parse(Lex),
     ?assertEqual(182780583, solution_day_3_2024:part_one(Parse)).
 
-issues_test() ->
-    TestInput = "mul(690,168*),mulwhen(16,622),mulwho(185,234)",
-    {ok, Lex} = solution_day_3_2024:lex(TestInput),
-    ?LOG(#{lex => Lex}),
+part_two_solution_test() ->
+    {ok, Input} = file:read_file("inputs/2024-day-3.txt"),
+    {ok, Lex} = solution_day_3_2024:lex(binary_to_list(Input)),
     {ok, Parse} = solution_day_3_2024:parse(Lex),
-    ?LOG(#{parse => Parse}),
-    ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
+    ?assertEqual(90772405, solution_day_3_2024:part_two(Parse)).

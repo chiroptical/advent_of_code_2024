@@ -17,27 +17,44 @@ parse(Input) ->
 -spec multiply_and_sum(list(integer())) -> integer().
 multiply_and_sum(Inp) ->
     lists:foldl(
-        fun({X, Y}, Acc) ->
-            Acc + X * Y
+        fun(Item, Acc) ->
+            case Item of
+                {numbers, {X, Y}} ->
+                    Acc + X * Y;
+                do ->
+                    Acc;
+                dont ->
+                    Acc
+            end
         end,
         0,
         Inp
     ).
 
-%% -spec multiply_and_sum(list(integer()), file:io_device()) -> integer().
-%% multiply_and_sum(Inp, Io) ->
-%%     lists:foldl(
-%%         fun ({X, Y}, Acc) ->
-%%             io:format(Io, "~B ~B: ~B~n", [X, Y, X * Y]),
-%%             Acc + X * Y
-%%         end,
-%%         0,
-%%         Inp
-%%     ).
+-spec multiply_and_sum_with_mode(list(integer())) -> integer().
+multiply_and_sum_with_mode(Inp) ->
+    lists:foldl(
+        fun(Item, {Mode, Sum}) ->
+            case Item of
+                {numbers, {X, Y}} ->
+                    case Mode of
+                        do ->
+                            {Mode, Sum + X * Y};
+                        dont ->
+                            {Mode, Sum}
+                    end;
+                do ->
+                    {do, Sum};
+                dont ->
+                    {dont, Sum}
+            end
+        end,
+        {do, 0},
+        Inp
+    ).
 
 -spec part_one(list(list(integer()))) -> integer().
 part_one(Input) ->
-    %% {ok, Io} = file:open("debugging/erlang-debug.txt", [write]),
     lists:foldl(
         fun(X, Acc) ->
             Acc + multiply_and_sum(X)
@@ -47,5 +64,12 @@ part_one(Input) ->
     ).
 
 -spec part_two(_) -> integer().
-part_two(_Input) ->
-    42.
+part_two(Input) ->
+    lists:foldl(
+        fun(X, Acc) ->
+            {_Mode, Sum} = multiply_and_sum_with_mode(X),
+            Acc + Sum
+        end,
+        0,
+        Input
+    ).
