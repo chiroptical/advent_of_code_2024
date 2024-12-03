@@ -14,8 +14,8 @@ instruction -> else                                     : incomplete.
 memory -> instruction             : remove_incomplete('$1').
 memory -> instruction memory      : remove_incomplete_rec('$1', '$2').
 
-computer -> memory newline          : ['$1'].
-computer -> memory newline computer : ['$1'|'$3'].
+computer -> memory           : ['$1'].
+computer -> memory computer  : ['$1'|'$2'].
 
 else -> mul.
 else -> int.
@@ -23,6 +23,7 @@ else -> open_paren.
 else -> close_paren.
 else -> comma.
 else -> space.
+else -> newline.
 
 Erlang code.
 
@@ -31,24 +32,10 @@ extract_integer({_Token, _Line, Value}) -> Value.
 remove_incomplete(incomplete) ->
 	[];
 remove_incomplete({ok, A, B}) ->
-	X = length(integer_to_list(A)),
-	Y = length(integer_to_list(B)),
-	case (X > 3) or (Y > 3) of
-		true -> 
-			[];
-		false ->
-			[A * B]
-	end.
+	[A * B].
 
 remove_incomplete_rec(incomplete, X) ->
 	X;
 remove_incomplete_rec({ok, A, B}, Rest) ->
-	X = length(integer_to_list(A)),
-	Y = length(integer_to_list(B)),
-	case (X > 3) or (Y > 3) of
-		true -> 
-			Rest;
-		false ->
-			[A * B | Rest]
-	end.
+	[A * B | Rest].
 

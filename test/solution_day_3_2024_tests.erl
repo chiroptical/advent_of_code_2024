@@ -10,6 +10,24 @@
 -define(LOG(X), ok).
 -endif.
 
+random_one_test() ->
+    TestInput = "select()% mul(41,999)&mul(615,164)/%[-#*&}mul(488,200)what\n",
+    {ok, Lex} = solution_day_3_2024:lex(TestInput),
+    {ok, Parse} = solution_day_3_2024:parse(Lex),
+    ?assertEqual(239419, solution_day_3_2024:part_one(Parse)).
+
+nested_test() ->
+    TestInput = "mul(41,mul(2,3))\n",
+    {ok, Lex} = solution_day_3_2024:lex(TestInput),
+    {ok, Parse} = solution_day_3_2024:parse(Lex),
+    ?assertEqual(6, solution_day_3_2024:part_one(Parse)).
+
+next_to_eachother_test() ->
+    TestInput = "mul(2,3)mul(2,3)\n",
+    {ok, Lex} = solution_day_3_2024:lex(TestInput),
+    {ok, Parse} = solution_day_3_2024:parse(Lex),
+    ?assertEqual(12, solution_day_3_2024:part_one(Parse)).
+
 simple_test() ->
     TestInput = "mul(2,3)\n",
     {ok, Lex} = solution_day_3_2024:lex(TestInput),
@@ -40,24 +58,6 @@ incomplete_three_test() ->
     {ok, Parse} = solution_day_3_2024:parse(Lex),
     ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
 
-too_large_test() ->
-    TestInput = "mul(1234,3456)\n",
-    {ok, Lex} = solution_day_3_2024:lex(TestInput),
-    {ok, Parse} = solution_day_3_2024:parse(Lex),
-    ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
-
-first_too_large_test() ->
-    TestInput = "mul(1234,3)\n",
-    {ok, Lex} = solution_day_3_2024:lex(TestInput),
-    {ok, Parse} = solution_day_3_2024:parse(Lex),
-    ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
-
-second_too_large_test() ->
-    TestInput = "mul(1,1234)\n",
-    {ok, Lex} = solution_day_3_2024:lex(TestInput),
-    {ok, Parse} = solution_day_3_2024:parse(Lex),
-    ?assertEqual(0, solution_day_3_2024:part_one(Parse)).
-
 part_one_test() ->
     TestInput = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))\n",
     {ok, Lex} = solution_day_3_2024:lex(TestInput),
@@ -69,8 +69,8 @@ part_one_test() ->
 part_one_solution_test() ->
     {ok, Input} = file:read_file("inputs/2024-day-3.txt"),
     {ok, Lex} = solution_day_3_2024:lex(binary_to_list(Input)),
-    ?LOG(#{lex => Lex}),
+    %% ?LOG(#{lex => Lex}),
     {ok, Parse} = solution_day_3_2024:parse(Lex),
-    ?LOG(#{parse => Parse}),
+    %% ?LOG(#{parse => Parse}),
     % This isn't the correct number
     ?assertNotEqual(182949745, solution_day_3_2024:part_one(Parse)).

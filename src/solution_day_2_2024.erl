@@ -26,13 +26,15 @@ parse(Input) ->
 -spec rule(integer(), integer(), function()) -> boolean().
 rule(X, Y, Fun) ->
     maybe
-        ok ?= case Fun(X, Y) of
-            true -> ok;
-            false -> error
+        ok ?=
+            case Fun(X, Y) of
+                true -> ok;
+                false -> error
             end,
-        ok ?= case abs(Y - X) < 4 of
-            true -> ok;
-            false -> error
+        ok ?=
+            case abs(Y - X) < 4 of
+                true -> ok;
+                false -> error
             end,
         true
     else
