@@ -1,9 +1,34 @@
 -module(list_utils).
 
 -export([
+    take/2,
+    window/2,
     drop_nth/2,
     drop_nth_slow/2
 ]).
+
+-spec take(pos_integer(), list()) -> list().
+take(_N, []) ->
+    [];
+take(1, [Head|_Tail]) ->
+    [Head];
+take(N, [Head|Tail]) ->
+    [Head | take(N - 1, Tail)].
+
+%% NOTE: requires that you take exactly N elements each time
+%% i.e. window(2, [1, 2, 3]) ~ [[1, 2], [2, 3]]
+%%      window(2, [1]) ~ []
+-spec window(pos_integer(), list()) -> list(list()).
+window(_N, []) ->
+    [];
+window(N, List = [_Head|Tail]) ->
+    Take = take(N, List),
+    case length(Take) =:= N of
+        true ->
+            [Take | window(N, Tail)];
+        false ->
+            []
+    end.
 
 -spec drop_nth(pos_integer(), list()) -> list().
 drop_nth(N, X) ->
