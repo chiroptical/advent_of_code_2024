@@ -17,11 +17,33 @@ lex(Input) ->
 parse(Input) ->
     parser_day_3_2024:parse(Input).
 
+-spec multiply_and_sum(list(integer())) -> integer().
+multiply_and_sum(Inp) ->
+    lists:foldl(
+        fun ({X, Y}, Acc) ->
+            Acc + X * Y
+        end,
+        0,
+        Inp
+    ).
+
+-spec multiply_and_sum(list(integer()), file:io_device()) -> integer().
+multiply_and_sum(Inp, Io) ->
+    lists:foldl(
+        fun ({X, Y}, Acc) ->
+            io:format(Io, "~B ~B: ~B~n", [X, Y, X * Y]),
+            Acc + X * Y
+        end,
+        0,
+        Inp
+    ).
+
 -spec part_one(list(list(integer()))) -> integer().
 part_one(Input) ->
+    {ok, Io} = file:open("debugging/erlang-debug.txt", [write]),
     lists:foldl(
         fun(X, Acc) ->
-            Acc + lists:sum(X)
+            Acc + multiply_and_sum(X, Io)
         end,
         0,
         Input

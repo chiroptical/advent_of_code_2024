@@ -32,10 +32,10 @@ extract_integer({_Token, _Line, Value}) -> Value.
 remove_incomplete(incomplete) ->
 	[];
 remove_incomplete({ok, A, B}) ->
-	[A * B].
+	[{A, B}].
 
 remove_incomplete_rec(incomplete, X) ->
 	X;
 remove_incomplete_rec({ok, A, B}, Rest) ->
-	[A * B | Rest].
+	[{A, B} | Rest].
 
