@@ -1,6 +1,6 @@
 Nonterminals instruction memory computer else.
 
-Terminals mul int open_paren close_paren comma space newline.
+Terminals mul int open_paren close_paren comma space newline skip.
 
 Rootsymbol computer.
 
@@ -24,6 +24,7 @@ else -> close_paren.
 else -> comma.
 else -> space.
 else -> newline.
+else -> skip.
 
 Erlang code.
 

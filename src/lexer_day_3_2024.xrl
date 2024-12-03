@@ -18,6 +18,6 @@ Rules.
 {COMMA}               : {token, {comma, TokenLine}}.
 {SPACE}               : {token, {space, TokenLine}}.
 {NEWLINE}             : {token, {newline, TokenLine}}.
-{ELSE}                : skip_token.
+{ELSE}                : {token, {skip, TokenLine}}.
 
 Erlang code.

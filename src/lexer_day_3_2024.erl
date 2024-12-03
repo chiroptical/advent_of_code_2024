@@ -1,5 +1,5 @@
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     0
 ).
 %% The source of this file is part of leex distribution, as such it
@@ -15,10 +15,10 @@
 -export([format_error/1]).
 
 %% User code. This is placed here to allow extra attributes.
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 23).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 23).
 
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     14
 ).
 
@@ -422,7 +422,7 @@ tab_size() -> 8.
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.erl", 339).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.erl", 339).
 yystate() -> 7.
 
 yystate(10, Ics, Line, Col, Tlen, _, _) ->
@@ -507,51 +507,51 @@ yyaction(5, _, _, TokenLine, _) ->
     yyaction_5(TokenLine);
 yyaction(6, _, _, TokenLine, _) ->
     yyaction_6(TokenLine);
-yyaction(7, _, _, _, _) ->
-    yyaction_7();
+yyaction(7, _, _, TokenLine, _) ->
+    yyaction_7(TokenLine);
 yyaction(_, _, _, _, _) ->
     error.
 
 -compile({inline, yyaction_0/2}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 12).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 12).
 yyaction_0(TokenChars, TokenLine) ->
     {token, {int, TokenLine, list_to_integer(TokenChars)}}.
 
 -compile({inline, yyaction_1/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 13).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 13).
 yyaction_1(TokenLine) ->
     {token, {mul, TokenLine}}.
 
 -compile({inline, yyaction_2/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 14).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 14).
 yyaction_2(TokenLine) ->
     {token, {open_paren, TokenLine}}.
 
 -compile({inline, yyaction_3/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 15).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 15).
 yyaction_3(TokenLine) ->
     {token, {close_paren, TokenLine}}.
 
 -compile({inline, yyaction_4/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 16).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 16).
 yyaction_4(TokenLine) ->
     {token, {comma, TokenLine}}.
 
 -compile({inline, yyaction_5/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 17).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 17).
 yyaction_5(TokenLine) ->
     {token, {space, TokenLine}}.
 
 -compile({inline, yyaction_6/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 18).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 18).
 yyaction_6(TokenLine) ->
     {token, {newline, TokenLine}}.
 
--compile({inline, yyaction_7/0}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 19).
-yyaction_7() ->
-    skip_token.
+-compile({inline, yyaction_7/1}).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_3_2024.xrl", 19).
+yyaction_7(TokenLine) ->
+    {token, {skip, TokenLine}}.
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     344
 ).
