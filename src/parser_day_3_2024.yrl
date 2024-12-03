@@ -4,13 +4,13 @@ Terminals mul int open_paren close_paren comma space newline skip do dont.
 
 Rootsymbol computer.
 
-instruction -> mul open_paren int comma int close_paren : {ok, numbers, {extract_integer('$3'), extract_integer('$5')}}.
+instruction -> mul open_paren int comma int close_paren : {ok, operands, {extract_integer('$3'), extract_integer('$5')}}.
 instruction -> mul open_paren int comma int             : incomplete.
 instruction -> mul open_paren int comma                 : incomplete.
 instruction -> mul open_paren int                       : incomplete.
 instruction -> mul open_paren                           : incomplete.
-instruction -> do                                       : {ok, do}.
-instruction -> dont                                     : {ok, dont}.
+instruction -> do                                       : {ok, enable}.
+instruction -> dont                                     : {ok, disable}.
 instruction -> else                                     : incomplete.
 
 memory -> instruction             : remove_incomplete('$1').
@@ -32,21 +32,21 @@ Erlang code.
 
 extract_integer({_Token, _Line, Value}) -> Value.
 
-remove_incomplete({ok, numbers, {A, B}}) ->
-	[{numbers, {A, B}}];
-remove_incomplete({ok, do}) ->
-	[do];
-remove_incomplete({ok, dont}) ->
-	[dont];
+remove_incomplete({ok, operands, {A, B}}) ->
+	[{operands, {A, B}}];
+remove_incomplete({ok, enable}) ->
+	[enable];
+remove_incomplete({ok, disable}) ->
+	[disable];
 remove_incomplete(incomplete) ->
 	[].
 
-remove_incomplete_rec({ok, numbers, {A, B}}, Rest) ->
-	[{numbers, {A, B}} | Rest];
-remove_incomplete_rec({ok, do}, Rest) ->
-	[do | Rest];
-remove_incomplete_rec({ok, dont}, Rest) ->
-	[dont | Rest];
+remove_incomplete_rec({ok, operands, {A, B}}, Rest) ->
+	[{operands, {A, B}} | Rest];
+remove_incomplete_rec({ok, enable}, Rest) ->
+	[enable | Rest];
+remove_incomplete_rec({ok, disable}, Rest) ->
+	[disable | Rest];
 remove_incomplete_rec(incomplete, X) ->
 	X.
 

@@ -6,21 +6,21 @@
 
 extract_integer({_Token, _Line, Value}) -> Value.
 
-remove_incomplete({ok, numbers, {A, B}}) ->
-    [{numbers, {A, B}}];
-remove_incomplete({ok, do}) ->
-    [do];
-remove_incomplete({ok, dont}) ->
-    [dont];
+remove_incomplete({ok, operands, {A, B}}) ->
+    [{operands, {A, B}}];
+remove_incomplete({ok, enable}) ->
+    [enable];
+remove_incomplete({ok, disable}) ->
+    [disable];
 remove_incomplete(incomplete) ->
     [].
 
-remove_incomplete_rec({ok, numbers, {A, B}}, Rest) ->
-    [{numbers, {A, B}} | Rest];
-remove_incomplete_rec({ok, do}, Rest) ->
-    [do | Rest];
-remove_incomplete_rec({ok, dont}, Rest) ->
-    [dont | Rest];
+remove_incomplete_rec({ok, operands, {A, B}}, Rest) ->
+    [{operands, {A, B}} | Rest];
+remove_incomplete_rec({ok, enable}, Rest) ->
+    [enable | Rest];
+remove_incomplete_rec({ok, disable}, Rest) ->
+    [disable | Rest];
 remove_incomplete_rec(incomplete, X) ->
     X.
 
@@ -637,7 +637,7 @@ yeccpars2_7_(__Stack0) ->
     [___1 | __Stack] = __Stack0,
     [
         begin
-            {ok, do}
+            {ok, enable}
         end
         | __Stack
     ].
@@ -650,7 +650,7 @@ yeccpars2_8_(__Stack0) ->
     [___1 | __Stack] = __Stack0,
     [
         begin
-            {ok, dont}
+            {ok, disable}
         end
         | __Stack
     ].
@@ -793,7 +793,7 @@ yeccpars2_19_(__Stack0) ->
     [___6, ___5, ___4, ___3, ___2, ___1 | __Stack] = __Stack0,
     [
         begin
-            {ok, numbers, {extract_integer(___3), extract_integer(___5)}}
+            {ok, operands, {extract_integer(___3), extract_integer(___5)}}
         end
         | __Stack
     ].

@@ -19,11 +19,11 @@ multiply_and_sum(Inp) ->
     lists:foldl(
         fun(Item, Acc) ->
             case Item of
-                {numbers, {X, Y}} ->
+                {operands, {X, Y}} ->
                     Acc + X * Y;
-                do ->
+                enable ->
                     Acc;
-                dont ->
+                disable ->
                     Acc
             end
         end,
@@ -36,20 +36,20 @@ multiply_and_sum_with_mode(Inp) ->
     lists:foldl(
         fun(Item, {Mode, Sum}) ->
             case Item of
-                {numbers, {X, Y}} ->
+                {operands, {X, Y}} ->
                     case Mode of
-                        do ->
+                        enable ->
                             {Mode, Sum + X * Y};
-                        dont ->
+                        disable ->
                             {Mode, Sum}
                     end;
-                do ->
-                    {do, Sum};
-                dont ->
-                    {dont, Sum}
+                enable ->
+                    {Item, Sum};
+                disable ->
+                    {Item, Sum}
             end
         end,
-        {do, 0},
+        {enable, 0},
         Inp
     ).
 
