@@ -18,6 +18,7 @@ parse(Input) ->
     parser_day_4_2024:parse(Input).
 
 %% TODO: would be nice to describe these as a list of kernels
+%% Something like matrix:gets([{0,1}, {0,2}, {0,3}], Key, Xmas)
 get_right({Row, Col}, Xmas) ->
     X = maps:get({Row, Col + 1}, Xmas, none),
     Y = maps:get({Row, Col + 2}, Xmas, none),
@@ -47,7 +48,7 @@ get_x({Row, Col}, Xmas) ->
     B = maps:get({Row + 1, Col + 1}, Xmas, none),
     C = maps:get({Row - 1, Col + 1}, Xmas, none),
     D = maps:get({Row + 1, Col - 1}, Xmas, none),
-    [{A, B}, {C, D}].
+    {{A, B}, {C, D}}.
 
 search(Key, Xmas, Compare) ->
     Right = get_right(Key, Xmas),
@@ -75,7 +76,7 @@ check(X) ->
     (X =:= {m, s}) or (X =:= {s, m}).
 
 search_cross(Key, Xmas) ->
-    [X, Y] = get_x(Key, Xmas),
+    {X, Y} = get_x(Key, Xmas),
     case check(X) and check(Y) of
         true -> 1;
         false -> 0
