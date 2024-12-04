@@ -66,13 +66,13 @@ search(Key, Xmas, Compare) ->
     ).
 
 search_xmas(Key, Xmas) ->
-    search(Key, Xmas, ["M", "A", "S"]).
+    search(Key, Xmas, [m, a, s]).
 
 search_samx(Key, Xmas) ->
-    search(Key, Xmas, ["A", "M", "X"]).
+    search(Key, Xmas, [a, m, x]).
 
 check(X) ->
-    (X =:= {"M", "S"}) or (X =:= {"S", "M"}).
+    (X =:= {m, s}) or (X =:= {s, m}).
 
 search_cross(Key, Xmas) ->
     [X, Y] = get_x(Key, Xmas),
@@ -87,9 +87,9 @@ part_one(Input) ->
     maps:fold(
         fun(Key, Value, Acc) ->
             case Value of
-                "X" ->
+                x ->
                     Acc + search_xmas(Key, Xmas);
-                "S" ->
+                s ->
                     Acc + search_samx(Key, Xmas);
                 _ ->
                     Acc
@@ -105,7 +105,7 @@ part_two(Input) ->
     maps:fold(
         fun(Key, Value, Acc) ->
             case Value of
-                "A" ->
+                a ->
                     Acc + search_cross(Key, Xmas);
                 _ ->
                     Acc
