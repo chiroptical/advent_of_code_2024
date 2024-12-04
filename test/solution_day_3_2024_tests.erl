@@ -2,7 +2,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
--define(DEBUG, true).
+-define(DEBUG, false).
 
 -if(?DEBUG =:= true).
 -define(LOG(X), logger:notice(X)).
