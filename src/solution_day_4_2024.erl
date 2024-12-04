@@ -42,6 +42,13 @@ get_negative_diagonal({Row, Col}, Xmas) ->
     Z = maps:get({Row + 3, Col - 3}, Xmas, none),
     [X, Y, Z].
 
+get_x({Row, Col}, Xmas) ->
+    A = maps:get({Row - 1, Col - 1}, Xmas, none),
+    B = maps:get({Row + 1, Col + 1}, Xmas, none),
+    C = maps:get({Row - 1, Col + 1}, Xmas, none),
+    D = maps:get({Row + 1, Col - 1}, Xmas, none),
+    [{A, B}, {C, D}].
+
 search(Key, Xmas, Compare) ->
     Right = get_right(Key, Xmas),
     Down = get_down(Key, Xmas),
@@ -64,6 +71,16 @@ search_xmas(Key, Xmas) ->
 search_samx(Key, Xmas) ->
     search(Key, Xmas, ["A", "M", "X"]).
 
+check(X) ->
+    (X =:= {"M", "S"}) or (X =:= {"S", "M"}).
+
+search_cross(Key, Xmas) ->
+    [X, Y] = get_x(Key, Xmas),
+    case check(X) and check(Y) of
+        true -> 1;
+        false -> 0
+    end.
+
 -spec part_one(list(list(string()))) -> integer().
 part_one(Input) ->
     Xmas = maps:from_list(Input),
@@ -83,5 +100,17 @@ part_one(Input) ->
     ).
 
 -spec part_two(list(list(string()))) -> integer().
-part_two(_Input) ->
-    42.
+part_two(Input) ->
+    Xmas = maps:from_list(Input),
+    maps:fold(
+        fun(Key, Value, Acc) ->
+            case Value of
+                "A" ->
+                    Acc + search_cross(Key, Xmas);
+                _ ->
+                    Acc
+            end
+        end,
+        0,
+        Xmas
+    ).
