@@ -14,8 +14,8 @@ lex(Input) ->
 parse(Input) ->
     parser_day_3_2024:parse(Input).
 
--spec multiply_and_sum(list(integer())) -> integer().
-multiply_and_sum(Inp) ->
+-spec part_one(list(integer())) -> integer().
+part_one(Input) ->
     lists:foldl(
         fun(Item, Acc) ->
             case Item of
@@ -28,12 +28,12 @@ multiply_and_sum(Inp) ->
             end
         end,
         0,
-        Inp
+        Input
     ).
 
--spec multiply_and_sum_with_mode(list(integer())) -> integer().
-multiply_and_sum_with_mode(Inp) ->
-    lists:foldl(
+-spec part_two(list(integer())) -> integer().
+part_two(Input) ->
+    {_Mode, Result} = lists:foldl(
         fun(Item, {Mode, Sum}) ->
             case Item of
                 {operands, {X, Y}} ->
@@ -50,26 +50,6 @@ multiply_and_sum_with_mode(Inp) ->
             end
         end,
         {enable, 0},
-        Inp
-    ).
-
--spec part_one(list(list(integer()))) -> integer().
-part_one(Input) ->
-    lists:foldl(
-        fun(X, Acc) ->
-            Acc + multiply_and_sum(X)
-        end,
-        0,
         Input
-    ).
-
--spec part_two(_) -> integer().
-part_two(Input) ->
-    lists:foldl(
-        fun(X, Acc) ->
-            {_Mode, Sum} = multiply_and_sum_with_mode(X),
-            Acc + Sum
-        end,
-        0,
-        Input
-    ).
+    ),
+    Result.

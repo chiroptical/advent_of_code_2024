@@ -7,7 +7,6 @@ DONT        = don't\(\)
 OPEN_PAREN  = \(
 CLOSE_PAREN = \)
 COMMA       = ,
-SPACE       = \s+
 NEWLINE     = \n
 ELSE        = .
 
@@ -20,8 +19,7 @@ Rules.
 {OPEN_PAREN}          : {token, {open_paren, TokenLine}}.
 {CLOSE_PAREN}         : {token, {close_paren, TokenLine}}.
 {COMMA}               : {token, {comma, TokenLine}}.
-{SPACE}               : {token, {space, TokenLine}}.
-{NEWLINE}             : {token, {newline, TokenLine}}.
+{NEWLINE}             : {token, {skip, TokenLine}}.
 {ELSE}                : {token, {skip, TokenLine}}.
 
 Erlang code.
