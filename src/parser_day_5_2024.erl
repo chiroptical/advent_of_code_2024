@@ -2,10 +2,13 @@
 -module(parser_day_5_2024).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.erl", 3).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 21).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 23).
 
 value({number, _Loc, Value}) -> 
 	Value.
+
+value_and_loc({number, {_Row, Col}, Value}) -> 
+	{Value, Col}.
 
 -file("/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/yeccpre.hrl", 0).
 %%
@@ -195,7 +198,7 @@ yecctoken2string1(Other) ->
 
 
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.erl", 198).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.erl", 201).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 -compile({nowarn_unused_function,  yeccpars2/7}).
@@ -218,7 +221,7 @@ yeccpars2(7=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %% yeccpars2(8=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_8(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(9=S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_0(S, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_9(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(10=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_10(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(11=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -227,12 +230,14 @@ yeccpars2(9=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_12(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(13=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_13(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(14=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_14(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(15=S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_15(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(16=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_16(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(14=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_14(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(15=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_15(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(16=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_16(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(17=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_17(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
  erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
@@ -295,7 +300,12 @@ yeccpars2_8(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_8_(Stack),
  yeccgoto_rules(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
-%% yeccpars2_9: see yeccpars2_0
+-dialyzer({nowarn_function, yeccpars2_9/7}).
+-compile({nowarn_unused_function,  yeccpars2_9/7}).
+yeccpars2_9(S, 'number', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
+yeccpars2_9(_, _, _, _, T, _, _) ->
+ yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_10/7}).
 -compile({nowarn_unused_function,  yeccpars2_10/7}).
@@ -307,48 +317,54 @@ yeccpars2_10(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -dialyzer({nowarn_function, yeccpars2_11/7}).
 -compile({nowarn_unused_function,  yeccpars2_11/7}).
 yeccpars2_11(S, 'newline', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 15, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 16, Ss, Stack, T, Ts, Tzr);
 yeccpars2_11(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_12/7}).
 -compile({nowarn_unused_function,  yeccpars2_12/7}).
 yeccpars2_12(S, 'comma', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
 yeccpars2_12(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_12_(Stack),
  yeccgoto_update(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_13/7}).
 -compile({nowarn_unused_function,  yeccpars2_13/7}).
-yeccpars2_13(S, 'number', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 4, Ss, Stack, T, Ts, Tzr);
 yeccpars2_13(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_|Nss] = Ss,
  NewStack = yeccpars2_13_(Stack),
- yeccgoto_update(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ yeccgoto_integer_and_loc(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_14/7}).
 -compile({nowarn_unused_function,  yeccpars2_14/7}).
+yeccpars2_14(S, 'number', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
 yeccpars2_14(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_|Nss] = Ss,
+ [_|Nss] = Ss,
  NewStack = yeccpars2_14_(Stack),
  yeccgoto_update(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_15/7}).
 -compile({nowarn_unused_function,  yeccpars2_15/7}).
-yeccpars2_15(S, 'number', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 4, Ss, Stack, T, Ts, Tzr);
 yeccpars2_15(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_|Nss] = Ss,
+ [_,_|Nss] = Ss,
  NewStack = yeccpars2_15_(Stack),
- yeccgoto_updates(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ yeccgoto_update(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_16/7}).
 -compile({nowarn_unused_function,  yeccpars2_16/7}).
+yeccpars2_16(S, 'number', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
 yeccpars2_16(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_|Nss] = Ss,
+ [_|Nss] = Ss,
  NewStack = yeccpars2_16_(Stack),
+ yeccgoto_updates(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccpars2_17/7}).
+-compile({nowarn_unused_function,  yeccpars2_17/7}).
+yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_|Nss] = Ss,
+ NewStack = yeccpars2_17_(Stack),
  yeccgoto_updates(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_instructions/7}).
@@ -363,12 +379,15 @@ yeccgoto_integer(0, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_integer(5, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_integer(7, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_2(2, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_integer(9, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_2(2, Cat, Ss, Stack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccgoto_integer_and_loc/7}).
+-compile({nowarn_unused_function,  yeccgoto_integer_and_loc/7}).
+yeccgoto_integer_and_loc(9, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_12(12, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_integer(13, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_integer_and_loc(14, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_12(12, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_integer(15, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_integer_and_loc(16, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_12(12, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_rules/7}).
@@ -382,17 +401,17 @@ yeccgoto_rules(7=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_update/7}).
 yeccgoto_update(9, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_11(11, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_update(13=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_14(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_update(15, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_update(14=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_15(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_update(16, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_11(11, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_updates/7}).
 -compile({nowarn_unused_function,  yeccgoto_updates/7}).
 yeccgoto_updates(9=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_10(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_updates(15=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_16(_S, Cat, Ss, Stack, T, Ts, Tzr).
+yeccgoto_updates(16=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -compile({inline,yeccpars2_4_/1}).
 -dialyzer({nowarn_function, yeccpars2_4_/1}).
@@ -407,7 +426,7 @@ yeccpars2_4_(__Stack0) ->
 -compile({inline,yeccpars2_7_/1}).
 -dialyzer({nowarn_function, yeccpars2_7_/1}).
 -compile({nowarn_unused_function,  yeccpars2_7_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 7).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 9).
 yeccpars2_7_(__Stack0) ->
  [___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -417,7 +436,7 @@ yeccpars2_7_(__Stack0) ->
 -compile({inline,yeccpars2_8_/1}).
 -dialyzer({nowarn_function, yeccpars2_8_/1}).
 -compile({nowarn_unused_function,  yeccpars2_8_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 8).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 10).
 yeccpars2_8_(__Stack0) ->
  [___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -427,7 +446,7 @@ yeccpars2_8_(__Stack0) ->
 -compile({inline,yeccpars2_10_/1}).
 -dialyzer({nowarn_function, yeccpars2_10_/1}).
 -compile({nowarn_unused_function,  yeccpars2_10_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 5).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 7).
 yeccpars2_10_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -437,21 +456,21 @@ yeccpars2_10_(__Stack0) ->
 -compile({inline,yeccpars2_12_/1}).
 -dialyzer({nowarn_function, yeccpars2_12_/1}).
 -compile({nowarn_unused_function,  yeccpars2_12_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 11).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 13).
 yeccpars2_12_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
-                                 [___1]
+                                         [___1]
   end | __Stack].
 
 -compile({inline,yeccpars2_13_/1}).
 -dialyzer({nowarn_function, yeccpars2_13_/1}).
 -compile({nowarn_unused_function,  yeccpars2_13_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 10).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 5).
 yeccpars2_13_(__Stack0) ->
- [___2,___1 | __Stack] = __Stack0,
+ [___1 | __Stack] = __Stack0,
  [begin
-                                 [___1]
+                            value_and_loc(___1)
   end | __Stack].
 
 -compile({inline,yeccpars2_14_/1}).
@@ -459,9 +478,9 @@ yeccpars2_13_(__Stack0) ->
 -compile({nowarn_unused_function,  yeccpars2_14_/1}).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 12).
 yeccpars2_14_(__Stack0) ->
- [___3,___2,___1 | __Stack] = __Stack0,
+ [___2,___1 | __Stack] = __Stack0,
  [begin
-                                 [___1 | ___3]
+                                         [___1]
   end | __Stack].
 
 -compile({inline,yeccpars2_15_/1}).
@@ -469,20 +488,30 @@ yeccpars2_14_(__Stack0) ->
 -compile({nowarn_unused_function,  yeccpars2_15_/1}).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 14).
 yeccpars2_15_(__Stack0) ->
- [___2,___1 | __Stack] = __Stack0,
+ [___3,___2,___1 | __Stack] = __Stack0,
  [begin
-                                    [___1]
+                                         [___1 | ___3]
   end | __Stack].
 
 -compile({inline,yeccpars2_16_/1}).
 -dialyzer({nowarn_function, yeccpars2_16_/1}).
 -compile({nowarn_unused_function,  yeccpars2_16_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 15).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 16).
 yeccpars2_16_(__Stack0) ->
+ [___2,___1 | __Stack] = __Stack0,
+ [begin
+                                    [___1]
+  end | __Stack].
+
+-compile({inline,yeccpars2_17_/1}).
+-dialyzer({nowarn_function, yeccpars2_17_/1}).
+-compile({nowarn_unused_function,  yeccpars2_17_/1}).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 17).
+yeccpars2_17_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
                                     [___1 | ___3]
   end | __Stack].
 
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 25).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_5_2024.yrl", 30).
