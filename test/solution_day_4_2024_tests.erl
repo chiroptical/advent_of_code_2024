@@ -25,9 +25,9 @@ test_input() ->
 part_two_test() ->
     TestInput = test_input(),
     {ok, Lex} = solution_day_4_2024:lex(TestInput),
-    ?LOG(#{lex => Lex}),
+    %% ?LOG(#{lex => Lex}),
     {ok, Parse} = solution_day_4_2024:parse(Lex),
-    ?LOG(#{parse => Parse}),
+    %% ?LOG(#{parse => Parse}),
     ?assertEqual(9, solution_day_4_2024:part_two(Parse)).
 
 part_two_solution_test() ->
