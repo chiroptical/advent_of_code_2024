@@ -67,19 +67,19 @@ reorder(RulesViolated, Positions) ->
 
 reorder_violated_rules(Rules, Positions) ->
     RulesViolated = lists:foldl(
-        fun (Rule, Acc) -> 
+        fun(Rule, Acc) ->
             case rule_is_invalid(Positions, Rule) of
-                true -> [Rule|Acc];
+                true -> [Rule | Acc];
                 false -> Acc
             end
-        end, 
+        end,
         [],
         Rules
     ),
     case RulesViolated of
-        [] -> 
+        [] ->
             get_middle_value(Positions);
-        _ -> 
+        _ ->
             %% logger:notice(#{rules_violated => RulesViolated, positions => Positions}),
             reorder_violated_rules(Rules, reorder(RulesViolated, Positions))
     end.
