@@ -52,7 +52,7 @@ evaluate_reorderings(Rules, Positions) ->
 
 reorder(RulesViolated, Positions) ->
     lists:foldl(
-        fun ({X, Y}, Acc) ->
+        fun({X, Y}, Acc) ->
             maybe
                 {ok, A} ?= maps:find(X, Acc),
                 {ok, B} ?= maps:find(Y, Acc),
@@ -62,7 +62,7 @@ reorder(RulesViolated, Positions) ->
             end
         end,
         Positions,
-        lists:sort(fun ({X, _}, {Y, _}) -> X < Y end, RulesViolated)
+        lists:sort(fun({X, _}, {Y, _}) -> X < Y end, RulesViolated)
     ).
 
 reorder_violated_rules(Rules, Positions) ->

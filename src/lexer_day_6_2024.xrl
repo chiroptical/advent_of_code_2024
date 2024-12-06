@@ -9,7 +9,7 @@ Rules.
 
 {CARROT}  : {token, {guard, TokenLoc, to_atom(TokenChars)}}.
 {OCTO}    : {token, {obstacle, TokenLoc}}.
-{DOT}     : skip_token. 
+{DOT}     : {token, {blank, TokenLoc}}. 
 {NEWLINE} : skip_token.
 
 Erlang code.

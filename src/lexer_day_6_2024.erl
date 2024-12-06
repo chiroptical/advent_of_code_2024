@@ -1,5 +1,5 @@
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     0
 ).
 %% The source of this file is part of leex distribution, as such it
@@ -15,7 +15,7 @@
 -export([format_error/1]).
 
 %% User code. This is placed here to allow extra attributes.
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 15).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 15).
 
 to_atom("<") ->
     west;
@@ -27,7 +27,7 @@ to_atom("v") ->
     north.
 
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     14
 ).
 
@@ -431,7 +431,7 @@ tab_size() -> 8.
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.erl", 348).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.erl", 348).
 yystate() -> 3.
 
 yystate(4, Ics, Line, Col, Tlen, _, _) ->
@@ -470,35 +470,36 @@ yyaction(0, TokenLen, YYtcs, TokenLine, TokenCol) ->
     yyaction_0(TokenChars, TokenLine, TokenCol);
 yyaction(1, _, _, TokenLine, TokenCol) ->
     yyaction_1(TokenLine, TokenCol);
-yyaction(2, _, _, _, _) ->
-    yyaction_2();
+yyaction(2, _, _, TokenLine, TokenCol) ->
+    yyaction_2(TokenLine, TokenCol);
 yyaction(3, _, _, _, _) ->
     yyaction_3();
 yyaction(_, _, _, _, _) ->
     error.
 
 -compile({inline, yyaction_0/3}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 8).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 8).
 yyaction_0(TokenChars, TokenLine, TokenCol) ->
     TokenLoc = {TokenLine, TokenCol},
     {token, {guard, TokenLoc, to_atom(TokenChars)}}.
 
 -compile({inline, yyaction_1/2}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 9).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 9).
 yyaction_1(TokenLine, TokenCol) ->
     TokenLoc = {TokenLine, TokenCol},
     {token, {obstacle, TokenLoc}}.
 
--compile({inline, yyaction_2/0}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 10).
-yyaction_2() ->
-    skip_token.
+-compile({inline, yyaction_2/2}).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 10).
+yyaction_2(TokenLine, TokenCol) ->
+    TokenLoc = {TokenLine, TokenCol},
+    {token, {blank, TokenLoc}}.
 
 -compile({inline, yyaction_3/0}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 11).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/lexer_day_6_2024.xrl", 11).
 yyaction_3() ->
     skip_token.
 -file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
+    "/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     344
 ).
