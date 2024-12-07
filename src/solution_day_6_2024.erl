@@ -77,10 +77,9 @@ walk(Positions, GuardPosition) ->
     end.
 
 -spec part_one(_) -> integer().
-part_one(Input) ->
-    InputPositions = maps:from_list(Input),
-    {ok, GuardPosition} = find_starting_position(InputPositions),
-    walk(InputPositions, GuardPosition).
+part_one(Positions) ->
+    {ok, GuardPosition} = find_starting_position(Positions),
+    walk(Positions, GuardPosition).
 
 -spec part_two(_) -> integer().
 part_two(_Input) ->

@@ -4,20 +4,24 @@ Terminals guard obstacle blank.
 
 Rootsymbol map.
 
-map -> guard        : [from_guard('$1')].
-map -> obstacle     : [from_obstacle('$1')].
-map -> blank        : [from_blank('$1')].
-map -> guard map    : [from_guard('$1')|'$2'].
-map -> obstacle map : [from_obstacle('$1')|'$2'].
-map -> blank map    : [from_blank('$1')|'$2'].
+map -> guard        : to_map('$1').
+map -> obstacle     : to_map('$1').
+map -> blank        : to_map('$1').
+map -> guard map    : insert(to_kv('$1'), '$2').
+map -> obstacle map : insert(to_kv('$1'), '$2').
+map -> blank map    : insert(to_kv('$1'), '$2').
 
 Erlang code.
 
-from_guard({guard, {X, Y}, Direction}) ->
-	{{X, Y}, {guard, Direction}}.
+to_map({guard, Position, Direction}) ->
+	#{Position => {guard, Direction}};
+to_map({Atom, Position}) ->
+	#{Position => Atom}.
 
-from_obstacle({obstacle, {X, Y}}) ->
-	{{X, Y}, obstacle}.
+to_kv({guard, Position, Direction}) ->
+	{Position, {guard, Direction}};
+to_kv({Atom, Position}) ->
+	{Position, Atom}.
 
-from_blank({blank, {X, Y}}) ->
-	{{X, Y}, blank}.
+insert({K, V}, M) ->
+	maps:put(K, V, M).
