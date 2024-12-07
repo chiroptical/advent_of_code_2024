@@ -19,27 +19,22 @@ parse(Input) ->
 
 clip(TestValue, Result) ->
     case Result > TestValue of
-        true -> TestValue + 1;
+        true -> nil;
         false -> Result
     end.
 
 concat_clip(TestValue, X, Y) ->
-    Result = list_to_integer(integer_to_list(Y) ++ integer_to_list(X)),
-    clip(TestValue, Result).
+    clip(
+        TestValue,
+        list_to_integer(integer_to_list(Y) ++ integer_to_list(X))
+    ).
 
-add_clip(TestValue, X, Y) ->
-    Result = X + Y,
-    clip(TestValue, Result).
+add_clip(TestValue, X, Y) -> clip(TestValue, X + Y).
 
-mul_clip(TestValue, X, Y) ->
-    Result = X * Y,
-    clip(TestValue, Result).
+mul_clip(TestValue, X, Y) -> clip(TestValue, X * Y).
 
 build_magmas(TestValue, Threes) ->
-    [
-        fun(A, B) -> F(TestValue, A, B) end
-     || F <- Threes
-    ].
+    [fun(A, B) -> F(TestValue, A, B) end || F <- Threes].
 
 is_valid_equation({TestValue, Inputs}, Threes) ->
     Magmas = build_magmas(TestValue, Threes),
@@ -49,7 +44,7 @@ is_valid_equation({TestValue, Inputs}, Threes) ->
                 [] ->
                     [X];
                 _ ->
-                    [F(X, Y) || F <- Magmas, Y <- Acc]
+                    [F(X, Y) || F <- Magmas, Y <- Acc, F(X, Y) =/= nil]
             end
         end,
         [],
