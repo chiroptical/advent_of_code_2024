@@ -73,7 +73,6 @@ step(Positions, GuardPosition = {Row, Col}, SeenPositions) ->
 walk(Positions, GuardPosition) ->
     case step(Positions, GuardPosition, sets:new()) of
         {done, SeenPositions} ->
-            logger:notice(#{seen => sets:to_list(SeenPositions)}),
             sets:size(SeenPositions)
     end.
 
@@ -81,7 +80,6 @@ walk(Positions, GuardPosition) ->
 part_one(Input) ->
     InputPositions = maps:from_list(Input),
     {ok, GuardPosition} = find_starting_position(InputPositions),
-    logger:notice(#{guard_position => GuardPosition}),
     walk(InputPositions, GuardPosition).
 
 -spec part_two(_) -> integer().
