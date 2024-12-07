@@ -19,6 +19,6 @@ to_atom("<") ->
 to_atom(">") ->
 	east;
 to_atom("^") ->
-	south;
+	north;
 to_atom("v") ->
-	north.
+	south.

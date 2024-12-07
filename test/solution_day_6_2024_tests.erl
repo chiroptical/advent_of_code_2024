@@ -2,7 +2,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
--define(DEBUG, true).
+-define(DEBUG, false).
 
 -if(?DEBUG =:= true).
 -define(LOG(X), logger:notice(X)).
@@ -42,10 +42,10 @@ part_one_test() ->
     ?LOG(#{lex => Lex}),
     {ok, Parse} = solution_day_6_2024:parse(Lex),
     ?LOG(#{parse => Parse}),
-    ?assertEqual(42, solution_day_6_2024:part_one(Parse)).
+    ?assertEqual(41, solution_day_6_2024:part_one(Parse)).
 
-%% part_one_solution_test() ->
-%%     {ok, Input} = file:read_file("inputs/2024-day-6.txt"),
-%%     {ok, Lex} = solution_day_6_2024:lex(binary_to_list(Input)),
-%%     {ok, Parse} = solution_day_6_2024:parse(Lex),
-%%     ?assertEqual(2427, solution_day_6_2024:part_one(Parse)).
+part_one_solution_test() ->
+    {ok, Input} = file:read_file("inputs/2024-day-6.txt"),
+    {ok, Lex} = solution_day_6_2024:lex(binary_to_list(Input)),
+    {ok, Parse} = solution_day_6_2024:parse(Lex),
+    ?assertEqual(5212, solution_day_6_2024:part_one(Parse)).
