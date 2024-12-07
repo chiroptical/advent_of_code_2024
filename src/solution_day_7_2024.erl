@@ -50,7 +50,7 @@ is_valid_equation({TestValue, Inputs}, Threes) ->
         [],
         Inputs
     ),
-    case lists:any(fun(X) -> X == TestValue end, Leaves) of
+    case lists:any(fun(X) -> X =:= TestValue end, Leaves) of
         true -> TestValue;
         false -> 0
     end.
