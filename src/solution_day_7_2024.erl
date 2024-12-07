@@ -44,7 +44,7 @@ is_valid_equation({TestValue, Inputs}, Threes) ->
                 [] ->
                     [X];
                 _ ->
-                    [F(X, Y) || F <- Magmas, Y <- Acc, F(X, Y) =/= nil]
+                    [Res || F <- Magmas, Y <- Acc, Res <- [F(X, Y)], Res =/= nil]
             end
         end,
         [],
