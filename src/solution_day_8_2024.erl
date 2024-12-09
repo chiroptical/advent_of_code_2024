@@ -1,8 +1,5 @@
 -module(solution_day_8_2024).
 
-% NOTE: this makes the LSP happy, but shouldn't be necessary
--feature(maybe_expr, enable).
-
 -export([
     lex/1,
     parse/1,
@@ -17,8 +14,8 @@ lex(Input) ->
 parse(Input) ->
     parser_day_8_2024:parse(Input).
 
-unique_pairs(X) ->
-    sets:from_list([{A, B} || A <- X, B <- X, A < B]).
+pairs([]) -> [];
+pairs([H|T]) -> [{H, X} || X <- T] ++ pairs(T).
 
 distance({A, B}, {C, D}) ->
     {C - A, D - B}.
@@ -69,8 +66,8 @@ follow(X, V, M, once) ->
 solve(Follow, Positions, AntennaPositions) ->
     maps:fold(
         fun(_Name, Antennas, Acc) ->
-            Pairs = unique_pairs(Antennas),
-            sets:fold(
+            Pairs = pairs(Antennas),
+            lists:foldl(
                 fun({X, Y}, Into) ->
                     Distance = distance(X, Y),
                     FollowX = follow(X, flip_vec(Distance), Into, Follow),
