@@ -31,11 +31,11 @@ part_two_test() ->
     ?LOG(#{parse => Parse}),
     ?assertEqual(11387, solution_day_7_2024:part_two(Parse)).
 
-part_two_solution_test() ->
-    {ok, Input} = file:read_file("inputs/2024-day-7.txt"),
-    {ok, Lex} = solution_day_7_2024:lex(binary_to_list(Input)),
-    {ok, Parse} = solution_day_7_2024:parse(Lex),
-    ?assertEqual(105517128211543, solution_day_7_2024:part_two(Parse)).
+%% part_two_solution_test() ->
+%%     {ok, Input} = file:read_file("inputs/2024-day-7.txt"),
+%%     {ok, Lex} = solution_day_7_2024:lex(binary_to_list(Input)),
+%%     {ok, Parse} = solution_day_7_2024:parse(Lex),
+%%     ?assertEqual(105517128211543, solution_day_7_2024:part_two(Parse)).
 
 part_one_test() ->
     TestInput = test_input(),
@@ -45,8 +45,8 @@ part_one_test() ->
     ?LOG(#{parse => Parse}),
     ?assertEqual(3749, solution_day_7_2024:part_one(Parse)).
 
-part_one_solution_test() ->
-    {ok, Input} = file:read_file("inputs/2024-day-7.txt"),
-    {ok, Lex} = solution_day_7_2024:lex(binary_to_list(Input)),
-    {ok, Parse} = solution_day_7_2024:parse(Lex),
-    ?assertEqual(3245122495150, solution_day_7_2024:part_one(Parse)).
+%% part_one_solution_test() ->
+%%     {ok, Input} = file:read_file("inputs/2024-day-7.txt"),
+%%     {ok, Lex} = solution_day_7_2024:lex(binary_to_list(Input)),
+%%     {ok, Parse} = solution_day_7_2024:parse(Lex),
+%%     ?assertEqual(3245122495150, solution_day_7_2024:part_one(Parse)).

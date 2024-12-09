@@ -66,17 +66,15 @@ follow(X, V, M, once) ->
             maps:put(NewX, antinode, M)
     end.
 
--spec part_one(_) -> integer().
-part_one(Positions) ->
-    AntennaPositions = get_antenna_positions(Positions),
-    Antinodes = maps:fold(
+solve(Follow, Positions, AntennaPositions) ->
+    maps:fold(
         fun(_Name, Antennas, Acc) ->
             Pairs = unique_pairs(Antennas),
             sets:fold(
                 fun({X, Y}, Into) ->
                     Distance = distance(X, Y),
-                    FollowX = follow(X, flip_vec(Distance), Into, once),
-                    follow(Y, Distance, FollowX, once)
+                    FollowX = follow(X, flip_vec(Distance), Into, Follow),
+                    follow(Y, Distance, FollowX, Follow)
                 end,
                 Acc,
                 Pairs
@@ -84,30 +82,26 @@ part_one(Positions) ->
         end,
         Positions,
         AntennaPositions
-    ),
-    maps:size(maps:filter(fun(_K, V) -> V =:= antinode end, Antinodes)).
+    ).
+
+-spec part_one(_) -> integer().
+part_one(Positions) ->
+    AntennaPositions = get_antenna_positions(Positions),
+    NewPositions = solve(once, Positions, AntennaPositions),
+    Antinodes = maps:filter(fun(_K, V) -> V =:= antinode end, NewPositions),
+    maps:size(Antinodes).
+
+is_antenna({antenna, _}) -> true;
+is_antenna(_) -> false.
 
 -spec part_two(_) -> integer().
 part_two(Positions) ->
     AntennaPositions = get_antenna_positions(Positions),
-    Antinodes = maps:fold(
-        fun(_Name, Antennas, Acc) ->
-            Pairs = unique_pairs(Antennas),
-            sets:fold(
-                fun({X, Y}, Into) ->
-                    Distance = distance(X, Y),
-                    WithX = maps:put(X, antinode, Into),
-                    WithY = maps:put(Y, antinode, WithX),
-                    FollowX = follow(X, flip_vec(Distance), WithY, continue),
-                    follow(Y, Distance, FollowX, continue)
-                end,
-                Acc,
-                Pairs
-            )
+    NewPositions = solve(continue, Positions, AntennaPositions),
+    Antinodes = maps:filter(
+        fun(_K, V) ->
+            (V =:= antinode) or is_antenna(V)
         end,
-        Positions,
-        AntennaPositions
+        NewPositions
     ),
-    Filtered = maps:filter(fun(_K, V) -> V =:= antinode end, Antinodes),
-    logger:notice(#{antinodes => Filtered}),
-    maps:size(Filtered).
+    maps:size(Antinodes).
