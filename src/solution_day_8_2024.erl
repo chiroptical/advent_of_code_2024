@@ -15,7 +15,7 @@ parse(Input) ->
     parser_day_8_2024:parse(Input).
 
 pairs([]) -> [];
-pairs([H|T]) -> [{H, X} || X <- T] ++ pairs(T).
+pairs([H | T]) -> [{H, X} || X <- T] ++ pairs(T).
 
 distance({A, B}, {C, D}) ->
     {C - A, D - B}.
