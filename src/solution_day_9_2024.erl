@@ -8,7 +8,7 @@
 ]).
 
 to_dense(Sparse) ->
-    {Dense, NextIndex} =
+    {Dense, _} =
         lists:foldl(
             fun(Elem, {Acc, Idx}) ->
                 case Elem of
@@ -23,7 +23,7 @@ to_dense(Sparse) ->
             {queue:new(), 0},
             Sparse
         ),
-    {Dense, NextIndex - 1}.
+    Dense.
 
 find_last(Q) ->
     case queue:out_r(Q) of
@@ -52,7 +52,7 @@ solve_one(Q, Acc) ->
 
 -spec part_one(_) -> integer().
 part_one(Sparse) ->
-    {Dense, _} = to_dense(Sparse),
+    Dense = to_dense(Sparse),
     Result = solve_one(Dense, queue:new()),
     {Acc, _} = lists:foldl(
         fun(Elem, {Acc, Idx}) ->
