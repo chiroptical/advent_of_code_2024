@@ -1,16 +1,19 @@
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.yrl", 0).
--module(parser_day_4_2024).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.erl", 3).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.yrl", 0).
+-module(parser_day_10_2024).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.erl", 3).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.yrl", 10).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.yrl", 10).
 
-reshape({xmas, {Row, Col}, Xmas}) ->
-    {{Row, Col}, Xmas}.
+to_map({height, Position, Value}) ->
+	#{Position => Value}.
 
--file(
-    "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/yeccpre.hrl",
-    0
-).
+to_kv({height, Position, Value}) ->
+	{Position, Value}.
+
+insert({K, V}, M) ->
+	maps:put(K, V, M).
+
+-file("/nix/store/d66cbm6ni7fgy6gk6mri4p2hppn3dybs-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -36,27 +39,25 @@ reshape({xmas, {Row, Col}, Xmas}) ->
 
 -type yecc_ret() :: {'error', _} | {'ok', _}.
 
--ifdef(YECC_PARSE_DOC).
+-ifdef (YECC_PARSE_DOC).
 -doc ?YECC_PARSE_DOC.
 -endif.
 -spec parse(Tokens :: list()) -> yecc_ret().
 parse(Tokens) ->
     yeccpars0(Tokens, {no_func, no_location}, 0, [], []).
 
--ifdef(YECC_PARSE_AND_SCAN_DOC).
+-ifdef (YECC_PARSE_AND_SCAN_DOC).
 -doc ?YECC_PARSE_AND_SCAN_DOC.
 -endif.
--spec parse_and_scan(
-    {function() | {atom(), atom()}, [_]}
-    | {atom(), atom(), [_]}
-) -> yecc_ret().
+-spec parse_and_scan({function() | {atom(), atom()}, [_]}
+                     | {atom(), atom(), [_]}) -> yecc_ret().
 parse_and_scan({F, A}) ->
     yeccpars0([], {{F, A}, no_location}, 0, [], []);
 parse_and_scan({M, F, A}) ->
     Arity = length(A),
     yeccpars0([], {{fun M:F/Arity, A}, no_location}, 0, [], []).
 
--ifdef(YECC_FORMAT_ERROR_DOC).
+-ifdef (YECC_FORMAT_ERROR_DOC).
 -doc ?YECC_FORMAT_ERROR_DOC.
 -endif.
 -spec format_error(any()) -> [char() | list()].
@@ -78,40 +79,34 @@ return_error(Location, Message) ->
 -define(CODE_VERSION, "1.4").
 
 yeccpars0(Tokens, Tzr, State, States, Vstack) ->
-    try
-        yeccpars1(Tokens, Tzr, State, States, Vstack)
-    catch
-        error:Error:Stacktrace ->
+    try yeccpars1(Tokens, Tzr, State, States, Vstack)
+    catch 
+        error: Error: Stacktrace ->
             try yecc_error_type(Error, Stacktrace) of
                 Desc ->
-                    erlang:raise(
-                        error,
-                        {yecc_bug, ?CODE_VERSION, Desc},
-                        Stacktrace
-                    )
-            catch
-                _:_ -> erlang:raise(error, Error, Stacktrace)
+                    erlang:raise(error, {yecc_bug, ?CODE_VERSION, Desc},
+                                 Stacktrace)
+            catch _:_ -> erlang:raise(error, Error, Stacktrace)
             end;
         %% Probably thrown from return_error/2:
-        throw:{error, {_Location, ?MODULE, _M}} = Error ->
+        throw: {error, {_Location, ?MODULE, _M}} = Error ->
             Error
     end.
 
-yecc_error_type(function_clause, [{?MODULE, F, ArityOrArgs, _} | _]) ->
+yecc_error_type(function_clause, [{?MODULE,F,ArityOrArgs,_} | _]) ->
     case atom_to_list(F) of
         "yeccgoto_" ++ SymbolL ->
-            {ok, [{atom, _, Symbol}], _} = erl_scan:string(SymbolL),
-            State =
-                case ArityOrArgs of
-                    [S, _, _, _, _, _, _] -> S;
-                    _ -> state_is_unknown
-                end,
+            {ok,[{atom,_,Symbol}],_} = erl_scan:string(SymbolL),
+            State = case ArityOrArgs of
+                        [S,_,_,_,_,_,_] -> S;
+                        _ -> state_is_unknown
+                    end,
             {Symbol, State, missing_in_goto_table}
     end.
 
 yeccpars1([Token | Tokens], Tzr, State, States, Vstack) ->
     yeccpars2(State, element(1, Token), States, Vstack, Token, Tokens, Tzr);
-yeccpars1([], {{F, A}, _Location}, State, States, Vstack) ->
+yeccpars1([], {{F, A},_Location}, State, States, Vstack) ->
     case apply(F, A) of
         {ok, Tokens, EndLocation} ->
             yeccpars1(Tokens, {{F, A}, EndLocation}, State, States, Vstack);
@@ -122,25 +117,11 @@ yeccpars1([], {{F, A}, _Location}, State, States, Vstack) ->
     end;
 yeccpars1([], {no_func, no_location}, State, States, Vstack) ->
     Line = 999999,
-    yeccpars2(
-        State,
-        '$end',
-        States,
-        Vstack,
-        yecc_end(Line),
-        [],
-        {no_func, Line}
-    );
+    yeccpars2(State, '$end', States, Vstack, yecc_end(Line), [],
+              {no_func, Line});
 yeccpars1([], {no_func, EndLocation}, State, States, Vstack) ->
-    yeccpars2(
-        State,
-        '$end',
-        States,
-        Vstack,
-        yecc_end(EndLocation),
-        [],
-        {no_func, EndLocation}
-    ).
+    yeccpars2(State, '$end', States, Vstack, yecc_end(EndLocation), [],
+              {no_func, EndLocation}).
 
 %% yeccpars1/7 is called from generated code.
 %%
@@ -149,38 +130,17 @@ yeccpars1([], {no_func, EndLocation}, State, States, Vstack) ->
 %% include directives. yecc will otherwise assume that an old
 %% yeccpre.hrl is included (one which defines yeccpars1/5).
 yeccpars1(State1, State, States, Vstack, Token0, [Token | Tokens], Tzr) ->
-    yeccpars2(
-        State,
-        element(1, Token),
-        [State1 | States],
-        [Token0 | Vstack],
-        Token,
-        Tokens,
-        Tzr
-    );
-yeccpars1(State1, State, States, Vstack, Token0, [], {{_F, _A}, _Location} = Tzr) ->
+    yeccpars2(State, element(1, Token), [State1 | States],
+              [Token0 | Vstack], Token, Tokens, Tzr);
+yeccpars1(State1, State, States, Vstack, Token0, [], {{_F,_A}, _Location}=Tzr) ->
     yeccpars1([], Tzr, State, [State1 | States], [Token0 | Vstack]);
 yeccpars1(State1, State, States, Vstack, Token0, [], {no_func, no_location}) ->
     Location = yecctoken_end_location(Token0),
-    yeccpars2(
-        State,
-        '$end',
-        [State1 | States],
-        [Token0 | Vstack],
-        yecc_end(Location),
-        [],
-        {no_func, Location}
-    );
+    yeccpars2(State, '$end', [State1 | States], [Token0 | Vstack],
+              yecc_end(Location), [], {no_func, Location});
 yeccpars1(State1, State, States, Vstack, Token0, [], {no_func, Location}) ->
-    yeccpars2(
-        State,
-        '$end',
-        [State1 | States],
-        [Token0 | Vstack],
-        yecc_end(Location),
-        [],
-        {no_func, Location}
-    ).
+    yeccpars2(State, '$end', [State1 | States], [Token0 | Vstack],
+              yecc_end(Location), [], {no_func, Location}).
 
 %% For internal use only.
 yecc_end(Location) ->
@@ -190,8 +150,7 @@ yecctoken_end_location(Token) ->
     try erl_anno:end_location(element(2, Token)) of
         undefined -> yecctoken_location(Token);
         Loc -> Loc
-    catch
-        _:_ -> yecctoken_location(Token)
+    catch _:_ -> yecctoken_location(Token)
     end.
 
 -compile({nowarn_unused_function, yeccerror/1}).
@@ -205,15 +164,12 @@ yecctoken_to_string(Token) ->
     try erl_scan:text(Token) of
         undefined -> yecctoken2string(Token);
         Txt -> Txt
-    catch
-        _:_ -> yecctoken2string(Token)
+    catch _:_ -> yecctoken2string(Token)
     end.
 
 yecctoken_location(Token) ->
-    try
-        erl_scan:location(Token)
-    catch
-        _:_ -> element(2, Token)
+    try erl_scan:location(Token)
+    catch _:_ -> element(2, Token)
     end.
 
 -compile({nowarn_unused_function, yecctoken2string/1}).
@@ -226,26 +182,16 @@ yecctoken2string(Token) ->
     end.
 
 -compile({nowarn_unused_function, yecctoken2string1/1}).
-yecctoken2string1({atom, _, A}) ->
-    io_lib:write_atom(A);
-yecctoken2string1({integer, _, N}) ->
-    io_lib:write(N);
-yecctoken2string1({float, _, F}) ->
-    io_lib:write(F);
-yecctoken2string1({char, _, C}) ->
-    io_lib:write_char(C);
-yecctoken2string1({var, _, V}) ->
-    io_lib:format("~s", [V]);
-yecctoken2string1({string, _, S}) ->
-    io_lib:write_string(S);
-yecctoken2string1({reserved_symbol, _, A}) ->
-    io_lib:write(A);
-yecctoken2string1({_Cat, _, Val}) ->
-    io_lib:format("~tp", [Val]);
-yecctoken2string1({dot, _}) ->
-    "'.'";
-yecctoken2string1({'$end', _}) ->
-    [];
+yecctoken2string1({atom, _, A}) -> io_lib:write_atom(A);
+yecctoken2string1({integer,_,N}) -> io_lib:write(N);
+yecctoken2string1({float,_,F}) -> io_lib:write(F);
+yecctoken2string1({char,_,C}) -> io_lib:write_char(C);
+yecctoken2string1({var,_,V}) -> io_lib:format("~s", [V]);
+yecctoken2string1({string,_,S}) -> io_lib:write_string(S);
+yecctoken2string1({reserved_symbol, _, A}) -> io_lib:write(A);
+yecctoken2string1({_Cat, _, Val}) -> io_lib:format("~tp", [Val]);
+yecctoken2string1({dot, _}) -> "'.'";
+yecctoken2string1({'$end', _}) -> [];
 yecctoken2string1({Other, _}) when is_atom(Other) ->
     io_lib:write_atom(Other);
 yecctoken2string1(Other) ->
@@ -253,81 +199,78 @@ yecctoken2string1(Other) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.erl", 198).
+
+
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.erl", 204).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
--compile({nowarn_unused_function, yeccpars2/7}).
-yeccpars2(0 = S, Cat, Ss, Stack, T, Ts, Tzr) ->
-    yeccpars2_0(S, Cat, Ss, Stack, T, Ts, Tzr);
+-compile({nowarn_unused_function,  yeccpars2/7}).
+yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_0(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(1=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_1(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(2 = S, Cat, Ss, Stack, T, Ts, Tzr) ->
-    yeccpars2_2(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(2=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_2(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(3=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_3(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
-    erlang:error({yecc_bug, "1.4", {missing_state_in_action_table, Other}}).
+ erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
 -dialyzer({nowarn_function, yeccpars2_0/7}).
--compile({nowarn_unused_function, yeccpars2_0/7}).
-yeccpars2_0(S, 'xmas', Ss, Stack, T, Ts, Tzr) ->
-    yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
+-compile({nowarn_unused_function,  yeccpars2_0/7}).
+yeccpars2_0(S, 'height', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(_, _, _, _, T, _, _) ->
-    yeccerror(T).
+ yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_1/7}).
--compile({nowarn_unused_function, yeccpars2_1/7}).
+-compile({nowarn_unused_function,  yeccpars2_1/7}).
 yeccpars2_1(_S, '$end', _Ss, Stack, _T, _Ts, _Tzr) ->
-    {ok, hd(Stack)};
+ {ok, hd(Stack)};
 yeccpars2_1(_, _, _, _, T, _, _) ->
-    yeccerror(T).
+ yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_2/7}).
--compile({nowarn_unused_function, yeccpars2_2/7}).
-yeccpars2_2(S, 'xmas', Ss, Stack, T, Ts, Tzr) ->
-    yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
+-compile({nowarn_unused_function,  yeccpars2_2/7}).
+yeccpars2_2(S, 'height', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
 yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
-    NewStack = yeccpars2_2_(Stack),
-    yeccgoto_chars(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ NewStack = yeccpars2_2_(Stack),
+ yeccgoto_map(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_3/7}).
--compile({nowarn_unused_function, yeccpars2_3/7}).
+-compile({nowarn_unused_function,  yeccpars2_3/7}).
 yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
-    [_ | Nss] = Ss,
-    NewStack = yeccpars2_3_(Stack),
-    yeccgoto_chars(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ [_|Nss] = Ss,
+ NewStack = yeccpars2_3_(Stack),
+ yeccgoto_map(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_chars/7}).
--compile({nowarn_unused_function, yeccgoto_chars/7}).
-yeccgoto_chars(0, Cat, Ss, Stack, T, Ts, Tzr) ->
-    yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_chars(2 = _S, Cat, Ss, Stack, T, Ts, Tzr) ->
-    yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr).
+-dialyzer({nowarn_function, yeccgoto_map/7}).
+-compile({nowarn_unused_function,  yeccgoto_map/7}).
+yeccgoto_map(0, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_map(2=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
--compile({inline, yeccpars2_2_/1}).
+-compile({inline,yeccpars2_2_/1}).
 -dialyzer({nowarn_function, yeccpars2_2_/1}).
--compile({nowarn_unused_function, yeccpars2_2_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.yrl", 3).
+-compile({nowarn_unused_function,  yeccpars2_2_/1}).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.yrl", 3).
 yeccpars2_2_(__Stack0) ->
-    [___1 | __Stack] = __Stack0,
-    [
-        begin
-            [reshape(___1)]
-        end
-        | __Stack
-    ].
+ [___1 | __Stack] = __Stack0,
+ [begin
+                    to_map(___1)
+  end | __Stack].
 
--compile({inline, yeccpars2_3_/1}).
+-compile({inline,yeccpars2_3_/1}).
 -dialyzer({nowarn_function, yeccpars2_3_/1}).
--compile({nowarn_unused_function, yeccpars2_3_/1}).
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.yrl", 4).
+-compile({nowarn_unused_function,  yeccpars2_3_/1}).
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.yrl", 4).
 yeccpars2_3_(__Stack0) ->
-    [___2, ___1 | __Stack] = __Stack0,
-    [
-        begin
-            [reshape(___1) | ___2]
-        end
-        | __Stack
-    ].
+ [___2,___1 | __Stack] = __Stack0,
+ [begin
+                    insert(to_kv(___1), ___2)
+  end | __Stack].
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_4_2024.yrl", 14).
+
+-file("/home/barry/programming/erlang/advent_of_code_2024/src/parser_day_10_2024.yrl", 20).
