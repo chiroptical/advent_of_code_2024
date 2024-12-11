@@ -3,8 +3,54 @@
 -export([
     run_drop_nth/0,
     run_drop_nth_slow/0,
-    compare_drop_nth/0
+    compare_drop_nth/0,
+    run_is_even_digits/0,
+    run_is_even_digits_with_integer_to_list/0
 ]).
+
+run_is_even_digits() ->
+    % warm up that JIT
+    solution_day_11_2024:is_even_digits(10),
+
+    %% Number = 100_000_000_000_000_000_000_000_000_000_000_000_000,
+    Number = 10,
+    List = lists:duplicate(100, Number),
+
+    Timings =
+        lists:map(fun (_X) ->
+            T1 = erlang:monotonic_time(nanosecond),
+            lists:foreach(fun (X) ->
+                    solution_day_11_2024:is_even_digits(X)
+                end,
+                List
+            ),
+            T2 = erlang:monotonic_time(nanosecond),
+            T2 - T1
+        end,
+        lists:seq(1, 10)
+    ),
+    Total = lists:foldl(fun (Elem, Acc) -> Acc + Elem end, 0, Timings),
+    Total / length(Timings).
+
+run_is_even_digits_with_integer_to_list() ->
+    %% Number = 100_000_000_000_000_000_000_000_000_000_000_000_000,
+    Number = 10,
+    List = lists:duplicate(100, Number),
+    Timings =
+        lists:map(fun (_X) ->
+            T1 = erlang:monotonic_time(nanosecond),
+            lists:foreach(fun (X) ->
+                AsList = integer_to_list(X),
+                length(AsList) rem 2 =:= 0
+            end,
+            List),
+            T2 = erlang:monotonic_time(nanosecond),
+            T2 - T1
+        end,
+        lists:seq(1, 10)
+    ),
+    Total = lists:foldl(fun (Elem, Acc) -> Acc + Elem end, 0, Timings),
+    Total / length(Timings).
 
 run_drop_nth() ->
     List = lists:duplicate(10_000, 1),

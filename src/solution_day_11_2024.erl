@@ -9,9 +9,10 @@
     parse/1
 ]).
 
-%% TODO: Use this instead of integer_to_list/1
+is_even_digits(0) ->
+    false;
 is_even_digits(X) when X > 0 ->
-    (round(math:log10(X)) + 1) rem 2 =:= 0.
+    (floor(math:log10(X)) + 1) rem 2 =:= 0.
 
 find_divisor(X, Base, Divisor) ->
     case (X div Divisor) > Divisor of
@@ -23,10 +24,10 @@ split_digits(X) ->
     Divisor = find_divisor(X, 10, 10),
     Div = X div Divisor,
     Rem = X rem Divisor,
-    {length(integer_to_list(X)) rem 2 =:= 0, Div, Rem}.
+    {Div, Rem}.
 
 blink(X, N, Max) ->
-    {IsEven, A, B} = split_digits(X),
+    IsEven = is_even_digits(X),
     case X of
         0 ->
             case N =:= Max of
@@ -34,6 +35,7 @@ blink(X, N, Max) ->
                 false -> blink(1, N + 1, Max)
             end;
         _ when IsEven ->
+            {A, B} = split_digits(X),
             case N =:= Max of
                 true -> 1;
                 false -> blink(A, N + 1, Max) + blink(B, N + 1, Max)
