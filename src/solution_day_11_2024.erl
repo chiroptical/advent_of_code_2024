@@ -57,14 +57,12 @@ blink_map(M) ->
     ).
 
 solve_map(Stones, N) ->
-    AsMap = maps:from_list(lists:map(fun(X) -> {X, 1} end, Stones)),
-    logger:notice(#{as_map => AsMap}),
     Blinked =
         lists:foldl(
             fun(_X, Acc) ->
                 blink_map(Acc)
             end,
-            AsMap,
+            Stones,
             lists:seq(1, N)
         ),
     maps:fold(fun(_K, V, Acc) -> V + Acc end, 0, Blinked).

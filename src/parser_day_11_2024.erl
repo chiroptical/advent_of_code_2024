@@ -4,8 +4,14 @@
 -export([parse/1, parse_and_scan/1, format_error/1]).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_11_2024.yrl", 10).
 
-to_value({stone, _Position, Value}) ->
-    Value.
+to_map({stone, _Pos, N}) ->
+    #{N => 1}.
+
+to_kv({stone, _Pos, N}) ->
+    {N, 1}.
+
+insert({K, V}, M) ->
+    maps:put(K, V, M).
 
 -file(
     "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/yeccpre.hrl",
@@ -253,7 +259,7 @@ yecctoken2string1(Other) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_11_2024.erl", 198).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_11_2024.erl", 204).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 -compile({nowarn_unused_function, yeccpars2/7}).
@@ -312,7 +318,7 @@ yeccpars2_2_(__Stack0) ->
     [___1 | __Stack] = __Stack0,
     [
         begin
-            [to_value(___1)]
+            to_map(___1)
         end
         | __Stack
     ].
@@ -325,9 +331,9 @@ yeccpars2_3_(__Stack0) ->
     [___2, ___1 | __Stack] = __Stack0,
     [
         begin
-            [to_value(___1) | ___2]
+            insert(to_kv(___1), ___2)
         end
         | __Stack
     ].
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_11_2024.yrl", 14).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/parser_day_11_2024.yrl", 20).
