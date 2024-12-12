@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{pkgs, elp, ...}:
 pkgs.mkShell {
   buildInputs = with pkgs; [
     # nix tools
@@ -7,5 +7,6 @@ pkgs.mkShell {
     # erlang stuff
     erlang_27
     rebar3
+    elp
   ];
 }

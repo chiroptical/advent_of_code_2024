@@ -23,9 +23,12 @@
         config.allowBroken = true;
         overlays = [ rebar_overlay ];
       };
+
+      elp = pkgs.callPackage ./nix/elp.nix { };
     in {
       devShell = import ./shell.nix {
         inherit pkgs;
+        inherit elp;
       };
       # defaultPackage = ...;
       packages = flake-utils.lib.flattenTree {
