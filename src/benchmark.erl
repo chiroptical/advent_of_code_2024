@@ -17,19 +17,21 @@ run_is_even_digits() ->
     List = lists:duplicate(100, Number),
 
     Timings =
-        lists:map(fun (_X) ->
-            T1 = erlang:monotonic_time(nanosecond),
-            lists:foreach(fun (X) ->
-                    solution_day_11_2024:is_even_digits(X)
-                end,
-                List
-            ),
-            T2 = erlang:monotonic_time(nanosecond),
-            T2 - T1
-        end,
-        lists:seq(1, 10)
-    ),
-    Total = lists:foldl(fun (Elem, Acc) -> Acc + Elem end, 0, Timings),
+        lists:map(
+            fun(_X) ->
+                T1 = erlang:monotonic_time(nanosecond),
+                lists:foreach(
+                    fun(X) ->
+                        solution_day_11_2024:is_even_digits(X)
+                    end,
+                    List
+                ),
+                T2 = erlang:monotonic_time(nanosecond),
+                T2 - T1
+            end,
+            lists:seq(1, 10)
+        ),
+    Total = lists:foldl(fun(Elem, Acc) -> Acc + Elem end, 0, Timings),
     Total / length(Timings).
 
 run_is_even_digits_with_integer_to_list() ->
@@ -37,19 +39,22 @@ run_is_even_digits_with_integer_to_list() ->
     Number = 10,
     List = lists:duplicate(100, Number),
     Timings =
-        lists:map(fun (_X) ->
-            T1 = erlang:monotonic_time(nanosecond),
-            lists:foreach(fun (X) ->
-                AsList = integer_to_list(X),
-                length(AsList) rem 2 =:= 0
+        lists:map(
+            fun(_X) ->
+                T1 = erlang:monotonic_time(nanosecond),
+                lists:foreach(
+                    fun(X) ->
+                        AsList = integer_to_list(X),
+                        length(AsList) rem 2 =:= 0
+                    end,
+                    List
+                ),
+                T2 = erlang:monotonic_time(nanosecond),
+                T2 - T1
             end,
-            List),
-            T2 = erlang:monotonic_time(nanosecond),
-            T2 - T1
-        end,
-        lists:seq(1, 10)
-    ),
-    Total = lists:foldl(fun (Elem, Acc) -> Acc + Elem end, 0, Timings),
+            lists:seq(1, 10)
+        ),
+    Total = lists:foldl(fun(Elem, Acc) -> Acc + Elem end, 0, Timings),
     Total / length(Timings).
 
 run_drop_nth() ->

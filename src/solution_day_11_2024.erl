@@ -3,8 +3,6 @@
 -export([
     part_one/1,
     part_two/1,
-    split_digits/1,
-    is_even_digits/1,
     lex/1,
     parse/1
 ]).
@@ -26,52 +24,58 @@ split_digits(X) ->
     Rem = X rem Divisor,
     {Div, Rem}.
 
-blink(X, N, Max) ->
-    IsEven = is_even_digits(X),
-    case X of
-        0 ->
-            case N =:= Max of
-                true -> 1;
-                false -> blink(1, N + 1, Max)
-            end;
-        _ when IsEven ->
-            {A, B} = split_digits(X),
-            case N =:= Max of
-                true -> 1;
-                false -> blink(A, N + 1, Max) + blink(B, N + 1, Max)
-            end;
-        _ ->
-            case N =:= Max of
-                true -> 1;
-                false -> blink(X * 2024, N + 1, Max)
-            end
+blink(0) ->
+    {one, 1};
+blink(X) ->
+    case is_even_digits(X) of
+        false -> {one, X * 2024};
+        true -> {two, split_digits(X)}
     end.
 
-evolve(X, Max) ->
-    blink(X, 0, Max).
+blink_map(M) ->
+    maps:fold(
+        fun(Num, Stones, Acc) ->
+            Update = fun(Key, Map) ->
+                maps:update_with(
+                    Key,
+                    fun(X) ->
+                        X + Stones
+                    end,
+                    Stones,
+                    Map
+                )
+            end,
+            case blink(Num) of
+                {one, A} ->
+                    Update(A, Acc);
+                {two, {A, B}} ->
+                    Update(B, Update(A, Acc))
+            end
+        end,
+        maps:new(),
+        M
+    ).
 
--spec part_one(_) -> integer().
+solve_map(Stones, N) ->
+    AsMap = maps:from_list(lists:map(fun(X) -> {X, 1} end, Stones)),
+    logger:notice(#{as_map => AsMap}),
+    Blinked =
+        lists:foldl(
+            fun(_X, Acc) ->
+                blink_map(Acc)
+            end,
+            AsMap,
+            lists:seq(1, N)
+        ),
+    maps:fold(fun(_K, V, Acc) -> V + Acc end, 0, Blinked).
+
+-spec part_one(list(integer())) -> integer().
 part_one(Stones) ->
-    lists:foldl(
-        fun(X, Acc) ->
-            Acc + evolve(X, 25)
-        end,
-        0,
-        Stones
-    ).
+    solve_map(Stones, 25).
 
--spec part_two(_) -> integer().
+-spec part_two(list(integer())) -> integer().
 part_two(Stones) ->
-    lists:foldl(
-        fun(X, Acc) ->
-            logger:notice(#{starting => X}),
-            Evolve = evolve(X, 75),
-            logger:notice(#{done => X}),
-            Acc + Evolve
-        end,
-        0,
-        Stones
-    ).
+    solve_map(Stones, 75).
 
 lex(Input) ->
     {ok, Tokens, _} = lexer_day_11_2024:string(Input),
