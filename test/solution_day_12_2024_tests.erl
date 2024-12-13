@@ -10,9 +10,8 @@
 -define(LOG(X), ok).
 -endif.
 
--define(RUN_SLOW_TESTS, false).
-
--if(?RUN_SLOW_TESTS =:= true).
+%% TODO: figure out how to define this properly
+-ifdef(run_slow_tests).
 -define(RUN(X), X).
 -else.
 -define(RUN(X), ?_assert(true)).
