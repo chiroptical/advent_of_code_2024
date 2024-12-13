@@ -86,3 +86,53 @@ count_sides_no_match_test() ->
         {[], 4},
         solution_day_12_2024:count_sides({1, 1}, "X", M)
     ).
+
+find_positions_test() ->
+    TestInput = test_input(),
+    {ok, Lex} = solution_day_12_2024:lex(TestInput),
+    {ok, Parse} = solution_day_12_2024:parse(Lex),
+    Result = solution_day_12_2024:find_positions({8, 3}, "I", Parse, sets:from_list([{8, 3}])),
+    Expected = sets:from_list(
+        [
+            {6, 3},
+            {7, 3},
+            {7, 4},
+            {7, 5},
+            {8, 2},
+            {8, 3},
+            {8, 4},
+            {8, 5},
+            {8, 6},
+            {9, 2},
+            {9, 3},
+            {9, 4},
+            {9, 6},
+            {10, 4}
+        ]
+    ),
+    ?assert(sets:is_equal(Expected, Result)).
+
+find_positions_one_seven_test() ->
+    TestInput = test_input(),
+    {ok, Lex} = solution_day_12_2024:lex(TestInput),
+    {ok, Parse} = solution_day_12_2024:parse(Lex),
+    Result = solution_day_12_2024:find_positions({1, 7}, "C", Parse, sets:from_list([{1, 7}])),
+    Expected = sets:from_list(
+        [
+            {1, 7},
+            {1, 8},
+            {2, 7},
+            {2, 8},
+            {2, 9},
+            {3, 6},
+            {3, 7},
+            {4, 4},
+            {4, 5},
+            {4, 6},
+            {5, 5},
+            {6, 5},
+            {6, 6},
+            {7, 6}
+        ]
+    ),
+    ?assert(sets:is_equal(Expected, Result)).
