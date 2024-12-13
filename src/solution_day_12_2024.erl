@@ -64,10 +64,9 @@ look(P, Plant, Garden) ->
 get_all(Look, Pos, Plant, Garden, Set) ->
     case Look of
         false ->
-            sets:new();
+            Set;
         true ->
-            Next = sets:add_element(Pos, Set),
-            case sets:is_equal(Set, Next) of
+            case sets:is_element(Pos, Set) of
                 true ->
                     Set;
                 false ->
@@ -87,11 +86,11 @@ find_positions({X, Y}, Plant, Garden, Set) ->
     LookRight = look(Right, Plant, Garden),
 
     UpSet = get_all(LookUp, Up, Plant, Garden, Set),
-    DownSet = get_all(LookDown, Down, Plant, Garden, Set),
-    LeftSet = get_all(LookLeft, Left, Plant, Garden, Set),
-    RightSet = get_all(LookRight, Right, Plant, Garden, Set),
+    DownSet = get_all(LookDown, Down, Plant, Garden, UpSet),
+    LeftSet = get_all(LookLeft, Left, Plant, Garden, DownSet),
+    RightSet = get_all(LookRight, Right, Plant, Garden, LeftSet),
 
-    sets:union([Set, UpSet, DownSet, LeftSet, RightSet]).
+    RightSet.
 
 count_sides({X, Y}, Plant, Garden) ->
     Positions = [{X, Y + 1}, {X, Y - 1}, {X + 1, Y}, {X - 1, Y}],
@@ -102,49 +101,38 @@ count_sides({X, Y}, Plant, Garden) ->
         end,
         Positions
     ),
-    {Matches, 4 - length(Matches)}.
-
-add_matches(Matches, Set) ->
-    lists:foldl(
-        fun(Elem, Acc) ->
-            sets:add_element(Elem, Acc)
-        end,
-        Set,
-        Matches
-    ).
+    4 - length(Matches).
 
 -spec part_one(_) -> integer().
 part_one(Garden) ->
     State =
         lists:foldl(
             fun({Pos, Plant}, State) ->
+                %% logger:notice(#{start => Pos}),
                 case find_group_number(Pos, State#state.positions, State#state.current_group) of
                     {seen, GroupNumber} ->
                         check_plant_matches_group(Plant, GroupNumber, State#state.labels),
-                        {Matches, Sides} = count_sides(Pos, Plant, Garden),
+                        Sides = count_sides(Pos, Plant, Garden),
                         NewState = State#state{
                             sides = maps:update_with(
                                 GroupNumber, fun(X) -> X + Sides end, State#state.sides
                             ),
                             spaces = maps:update_with(
                                 GroupNumber, fun(X) -> X + 1 end, State#state.spaces
-                            ),
-                            positions = maps:update_with(
-                                GroupNumber,
-                                fun(X) -> add_matches(Matches, X) end,
-                                State#state.positions
                             )
                         },
                         NewState;
                     {new, GroupNumber} ->
-                        %% TODO: Use find_positions/4 to update positions with group number
-                        {Matches, Sides} = count_sides(Pos, Plant, Garden),
+                        GroupPositions = find_positions(
+                            Pos, Plant, Garden, sets:from_list([Pos], [{version, 2}])
+                        ),
+                        Sides = count_sides(Pos, Plant, Garden),
                         NewState = State#state{
                             labels = maps:put(GroupNumber, Plant, State#state.labels),
                             sides = maps:put(GroupNumber, Sides, State#state.sides),
                             spaces = maps:put(GroupNumber, 1, State#state.spaces),
                             positions = maps:put(
-                                GroupNumber, sets:from_list([Pos | Matches]), State#state.positions
+                                GroupNumber, GroupPositions, State#state.positions
                             ),
                             current_group = GroupNumber
                         },
@@ -154,16 +142,18 @@ part_one(Garden) ->
             #state{},
             Garden
         ),
-    Positions = State#state.positions,
+    Labels = State#state.labels,
     Sides = State#state.sides,
     Spaces = State#state.spaces,
-    Check = 3,
-    %% logger:notice(#{
-    %%     positions => maps:get(Check, Positions),
-    %%     sides => maps:get(Check, Sides),
-    %%     spaces => maps:get(Check, Spaces)
-    %% }),
-    42.
+    maps:fold(
+        fun(K, _V, Acc) ->
+            Si = maps:get(K, Sides),
+            Sp = maps:get(K, Spaces),
+            Acc + (Si * Sp)
+        end,
+        0,
+        Labels
+    ).
 
 -spec part_two(_) -> integer().
 part_two(_Garden) ->
