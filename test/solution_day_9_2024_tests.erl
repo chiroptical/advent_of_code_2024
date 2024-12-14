@@ -12,6 +12,7 @@
 
 test_input() -> "2333133121414131402".
 
+%% TODO: Use part_one_solution_test_ as an example to get run this test without timing out
 %% part_two_test() ->
 %%     TestInput = test_input(),
 %%     {ok, Lex} = solution_day_9_2024:lex(TestInput),

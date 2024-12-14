@@ -31,6 +31,8 @@ part_two_test() ->
     ?LOG(#{parse => Parse}),
     ?assertEqual(11387, solution_day_7_2024:part_two(Parse)).
 
+
+%% TODO: Use part_one_solution_test_ as an example to get run this test without timing out
 %% part_two_solution_test() ->
 %%     {ok, Input} = file:read_file("inputs/2024-day-7.txt"),
 %%     {ok, Lex} = solution_day_7_2024:lex(binary_to_list(Input)),
