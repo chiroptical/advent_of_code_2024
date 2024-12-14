@@ -111,7 +111,16 @@ find_positions_test() ->
     TestInput = test_input(),
     {ok, Lex} = solution_day_12_2024:lex(TestInput),
     {ok, Parse} = solution_day_12_2024:parse(Lex),
-    Result = solution_day_12_2024:find_positions({8, 3}, "I", Parse, sets:from_list([{8, 3}])),
+    Start = {8, 3},
+    Result = solution_day_12_2024:find_positions(
+        Start,
+        "I",
+        Parse,
+        sets:from_list(
+            [Start],
+            [{version, 2}]
+        )
+    ),
     Expected = sets:from_list(
         [
             {6, 3},
@@ -128,15 +137,22 @@ find_positions_test() ->
             {9, 4},
             {9, 6},
             {10, 4}
-        ]
+        ],
+        [{version, 2}]
     ),
-    ?assert(sets:is_equal(Expected, Result)).
+    ?assert(Expected =:= Result).
 
 find_positions_one_seven_test() ->
     TestInput = test_input(),
     {ok, Lex} = solution_day_12_2024:lex(TestInput),
     {ok, Parse} = solution_day_12_2024:parse(Lex),
-    Result = solution_day_12_2024:find_positions({1, 7}, "C", Parse, sets:from_list([{1, 7}])),
+    Start = {1, 7},
+    Result = solution_day_12_2024:find_positions(
+        Start,
+        "C",
+        Parse,
+        sets:from_list([Start], [{version, 2}])
+    ),
     Expected = sets:from_list(
         [
             {1, 7},
@@ -153,9 +169,10 @@ find_positions_one_seven_test() ->
             {6, 5},
             {6, 6},
             {7, 6}
-        ]
+        ],
+        [{version, 2}]
     ),
-    ?assert(sets:is_equal(Expected, Result)).
+    ?assert(Expected =:= Result).
 
 find_positions_group_two_test() ->
     Input =
