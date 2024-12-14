@@ -15,7 +15,7 @@ let
   hashes = {
     linux-aarch64-unknown-linux-gnu = "sha256-0000000000000000000000000000000000000000000=";
     linux-x86_64-unknown-linux-gnu = "sha256-UU4IOBn0J+mpEHg4jKi1483cVWaVzdHBVrfOSz4+PXo=";
-    macos-aarch64-apple-darwin = "sha256-0000000000000000000000000000000000000000000=";
+    macos-aarch64-apple-darwin = "sha256-VNiBrfBYNXf2dSlHOYrgXsb8Lk+5A+Onqz/Pe+5P5Xk=";
     macos-x86_64-apple-darwin = "sha256-0000000000000000000000000000000000000000000=";
   };
 in
