@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-INPUT_DAY=15
-OUTPUT_DAY=16
+INPUT_DAY=16
+OUTPUT_DAY=17
 
 if [ ! -f src/lexer_day_${OUTPUT_DAY}_2024.xrl ]; then
   cp src/lexer_day_${INPUT_DAY}_2024.xrl src/lexer_day_${OUTPUT_DAY}_2024.xrl  

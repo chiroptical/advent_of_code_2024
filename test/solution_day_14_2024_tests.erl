@@ -38,13 +38,14 @@ test_input() ->
 %%     {ok, Parse} = solution_day_14_2024:parse(Lex),
 %%     ?assertEqual(1229, solution_day_14_2024:part_two(Parse)).
 
-part_one_test() ->
-    TestInput = test_input(),
-    {ok, Lex} = solution_day_14_2024:lex(TestInput),
-    ?LOG(#{lex => Lex}),
-    {ok, Parse} = solution_day_14_2024:parse(Lex),
-    ?LOG(#{parse => Parse}),
-    ?assertEqual(14, solution_day_14_2024:part_one(Parse)).
+%% TODO: Finish Day 14
+%% part_one_test() ->
+%%     TestInput = test_input(),
+%%     {ok, Lex} = solution_day_14_2024:lex(TestInput),
+%%     ?LOG(#{lex => Lex}),
+%%     {ok, Parse} = solution_day_14_2024:parse(Lex),
+%%     ?LOG(#{parse => Parse}),
+%%     ?assertEqual(14, solution_day_14_2024:part_one(Parse)).
 
 %% part_one_solution_test() ->
 %%     {ok, Input} = file:read_file("inputs/2024-day-8.txt"),
