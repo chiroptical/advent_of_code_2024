@@ -1,1 +1,4 @@
-[].
+[{<<"s2">>,
+  {git,"https://github.com/chiroptical/s2",
+       {ref,"4919fb077fe4a601579b2444a6fbadd4030ea1d3"}},
+  0}].
