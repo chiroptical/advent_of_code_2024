@@ -1,4 +1,4 @@
--module(labeller).
+-module(labeler).
 
 -export([
     run_test/0,
@@ -49,22 +49,21 @@ look(Position, Label, AllPositions) ->
         _ -> false
     end.
 
-inner(Position = {X, Y}, Label, AllPositions, Visited) ->
-    insert_to(Visited, Position),
-    Looks = [{0, 1}, {0, -1}, {1, 0}, {-1, 0}],
-    ValidLooks =
-        lists:foldl(
-            fun({A, B}, Acc) ->
-                LookPos = {X + A, Y + B},
-                case lookup_from(Visited, LookPos) of
-                    true -> Acc;
-                    false -> [{A, B} | Acc]
-                end
-            end,
-            [],
-            Looks
-        ),
-    Matches = lists:foldl(
+get_valid_looks({X, Y}, Looks, Visited) ->
+    lists:foldl(
+        fun({A, B}, Acc) ->
+            LookPos = {X + A, Y + B},
+            case lookup_from(Visited, LookPos) of
+                true -> Acc;
+                false -> [{A, B} | Acc]
+            end
+        end,
+        [],
+        Looks
+    ).
+
+find_all_matches(Position = {X, Y}, Label, ValidLooks, AllPositions, Visited) ->
+    lists:foldl(
         fun({A, B}, Acc) ->
             LookPos = {X + A, Y + B},
             case look(LookPos, Label, AllPositions) of
@@ -79,9 +78,22 @@ inner(Position = {X, Y}, Label, AllPositions, Visited) ->
         end,
         s2:singleton(Position),
         ValidLooks
-    ),
-    Matches.
+    ).
 
+inner(Position, Label, AllPositions, Visited) ->
+    insert_to(Visited, Position),
+    Looks = [{0, 1}, {0, -1}, {1, 0}, {-1, 0}],
+    ValidLooks = get_valid_looks(Position, Looks, Visited),
+    find_all_matches(Position, Label, ValidLooks, AllPositions, Visited).
+
+%% TODO: have a new ETS table that counts the number of times a particular
+%% position has been visited
+%%
+%% TODO: At a high level, I:
+%% - find an arbitrary point in the map (min key, but it doesn't matter)
+%% - recursively find all adjacent keys that point to the same value
+%% - split the map into one that has the keys I found and one that doesn't
+%% Then just unfold that
 solve(Input) ->
     lists:foldl(
         fun({Key, Val}, {CurrentGroup, Acc}) ->
