@@ -17,11 +17,6 @@
 %% User code. This is placed here to allow extra attributes.
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_20_2024.xrl", 11).
 
-from("S") -> start;
-from("E") -> stop;
-from(".") -> track;
-from("#") -> wall.
-
 -file(
     "/nix/store/5pjd6c7jnc7dzb4mjbjq1028s806yvhf-erlang-27.1.2/lib/erlang/lib/parsetools-2.6/include/leexinc.hrl",
     14
@@ -427,7 +422,7 @@ tab_size() -> 8.
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_20_2024.erl", 344).
+-file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_20_2024.erl", 339).
 yystate() -> 1.
 
 yystate(2, Ics, Line, Col, Tlen, _, _) ->
@@ -465,7 +460,7 @@ yyaction(_, _, _, _, _) ->
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_20_2024.xrl", 6).
 yyaction_0(TokenChars, TokenLine, TokenCol) ->
     TokenLoc = {TokenLine, TokenCol},
-    {token, {track, TokenLoc, from(TokenChars)}}.
+    {token, {position, TokenLoc, TokenChars}}.
 
 -compile({inline, yyaction_1/0}).
 -file("/Users/chiroptical/programming/erlang/advent_of_code_2024/src/lexer_day_20_2024.xrl", 7).
